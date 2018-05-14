@@ -1,0 +1,15 @@
+{
+  "name": "bluenet-nodejs-lib",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "tsc -watch"
+  },
+  "main": "dist/index.js",
+  "types" : "dist/index.d.ts",
+  "dependencies": {
+    "noble": "^1.9.1",
+    "serialport": "^6.2.0",
+    "typescript": "^2.8.3"
+  },
+  "license": "MIT"
+}
