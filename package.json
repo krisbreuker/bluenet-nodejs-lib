@@ -5,8 +5,9 @@
     "start": "tsc -watch"
   },
   "main": "dist/index.js",
-  "types" : "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "dependencies": {
+    "@types/node": "^10.0.8",
     "noble": "^1.9.1",
     "serialport": "^6.2.0",
     "typescript": "^2.8.3"

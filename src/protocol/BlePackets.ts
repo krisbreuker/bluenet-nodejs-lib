@@ -1,10 +1,10 @@
+import {ControlType, OpCode} from "./BluenetTypes";
 
 
-class BLEPacket {
+export class BLEPacket {
   type = 0
   length = 0
   payloadBuffer : any = null
-
 
   constructor(packetType : number) {
     this.type = packetType
@@ -74,7 +74,7 @@ class BLEPacket {
     buffer.writeUInt16BE(this.length, 2); // length
 
     if (this.length > 0 && this.payloadBuffer) {
-      buffer = Buffer.concat([buffer, this.payloadBuffer], 4 + this.length)
+      buffer = Buffer.concat([buffer, this.payloadBuffer])
     }
 
     return buffer
@@ -82,10 +82,10 @@ class BLEPacket {
 }
 
 
-class ControlPacket extends BLEPacket {}
+export class ControlPacket extends BLEPacket {}
 
 
-class keepAliveStatePacket extends ControlPacket {
+export class keepAliveStatePacket extends ControlPacket {
   constructor(action, state, timeout) {
     let keepAliveBuffer = Buffer.alloc(4);
     keepAliveBuffer.writeUInt8(action, 0);
@@ -98,7 +98,7 @@ class keepAliveStatePacket extends ControlPacket {
 }
 
 
-class FactoryResetPacket extends ControlPacket {
+export class FactoryResetPacket extends ControlPacket {
   constructor() {
     super(ControlType.FACTORY_RESET)
     this.loadUInt32(0xdeadbeef)
@@ -106,7 +106,7 @@ class FactoryResetPacket extends ControlPacket {
 }
 
 
-class ReadConfigPacket extends BLEPacket {
+export class ReadConfigPacket extends BLEPacket {
   getOpCode() {
     return OpCode.READ
   }
@@ -117,14 +117,14 @@ class ReadConfigPacket extends BLEPacket {
 }
 
 
-class WriteConfigPacket extends ReadConfigPacket {
+export class WriteConfigPacket extends ReadConfigPacket {
   getOpCode() {
     return OpCode.WRITE
   }
 }
 
 
-class ReadStatePacket extends BLEPacket {
+export class ReadStatePacket extends BLEPacket {
   getOpCode() {
     return OpCode.READ
   }
@@ -135,14 +135,14 @@ class ReadStatePacket extends BLEPacket {
 }
 
 
-class WriteStatePacket extends ReadStatePacket {
+export class WriteStatePacket extends ReadStatePacket {
   getOpCode() {
     return OpCode.WRITE
   }
 }
 
 
-class NotificationStatePacket extends ReadStatePacket {
+export class NotificationStatePacket extends ReadStatePacket {
   constructor(packetType, subscribe) {
     super(packetType)
     this.loadUInt8(subscribe ? 1 : 0)

@@ -20,6 +20,14 @@ export const numberChecker = function (value) {
 
 export const Util = {
 
+  boundToUnity: function(value) {
+    return Math.min(1,Math.max(value,0));
+  },
+
+  bound0_100: function(value) {
+    return Util.boundToUnity(value) * 100;
+  },
+
   getUUID : () : string => {
     const S4 = function () {
       return Math.floor(Math.random() * 0x10000 /* 65536 */).toString(16);

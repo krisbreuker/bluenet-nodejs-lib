@@ -1,6 +1,6 @@
 
 
-const ControlType = {
+export const ControlType = {
   SWITCH                 : 0,
   PWM                    : 1,
   SET_TIME               : 2,
@@ -34,7 +34,7 @@ const ControlType = {
   LOCK_SWITCH            : 30,
 }
 
-const ConfigurationType = {
+export const ConfigurationType = {
   DEVICE_NAME            : 0,
   DEVICE_TYPE            : 1,
   ROOM                   : 2,
@@ -88,13 +88,13 @@ const ConfigurationType = {
 }
 
 
-const MeshHandle = {
+export const MeshHandle = {
   HUB : 1,
   DATA : 2,
 }
 
 
-const StateType = {
+export const StateType = {
   RESET_COUNTER: 128,
   SWITCH_STATE: 129,
   ACCUMULATED_ENERGY: 130,
@@ -108,7 +108,7 @@ const StateType = {
 }
 
 
-const OpCode = {
+export const OpCode = {
   READ   : 0,
   WRITE  : 1,
   NOTIFY : 2,
@@ -117,7 +117,7 @@ const OpCode = {
 
 //  *********** Mesh ***********
 
-const MeshCommandType = {
+export const MeshCommandType = {
   CONTROL: 0,
   BEACON : 1,
   CONFIG : 2,
@@ -125,7 +125,7 @@ const MeshCommandType = {
 }
 
 
-const IntentType = {
+export const IntentType = {
   REGION_ENTER: 0,
   REGION_EXIT: 1,
   ENTER: 2,
@@ -134,11 +134,11 @@ const IntentType = {
 }
 
 
-const MeshKeepAliveTypes = {
+export const MeshKeepAliveTypes = {
   SHARED_TIMEOUT: 1,
 }
 
 
-const MeshMultiSwitchType = {
+export const MeshMultiSwitchType = {
   SIMPLE_LIST: 0,
 }
