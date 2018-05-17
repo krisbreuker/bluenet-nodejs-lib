@@ -28,6 +28,21 @@ export const Util = {
     return Util.boundToUnity(value) * 100;
   },
 
+  getBitMaskUInt8(value) {
+    var result = [false, false, false, false, false, false, false, false];
+    let one = 1
+    result[0] = (value & one) != 0
+    result[1] = (value & (one << 1)) != 0
+    result[2] = (value & (one << 2)) != 0
+    result[3] = (value & (one << 3)) != 0
+    result[4] = (value & (one << 4)) != 0
+    result[5] = (value & (one << 5)) != 0
+    result[6] = (value & (one << 6)) != 0
+    result[7] = (value & (one << 7)) != 0
+    return result
+  },
+
+
   getUUID : () : string => {
     const S4 = function () {
       return Math.floor(Math.random() * 0x10000 /* 65536 */).toString(16);

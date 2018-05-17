@@ -142,3 +142,53 @@ export const MeshKeepAliveTypes = {
 export const MeshMultiSwitchType = {
   SIMPLE_LIST: 0,
 }
+
+//****************** DEVICE TYPES IN ADVERTISEMENTS *************//
+
+export const DeviceType = {
+  undefined  : 0,
+  plug       : 1,
+  guidestone : 2,
+  builtin    : 3,
+  crownstoneUSB : 4,
+
+  getLabel: function(value) {
+    let keys = Object.keys(DeviceType);
+    for (let i = 0; i < keys.length; i++) {
+      if (DeviceType[keys[i]] === value) {
+        return keys[i];
+      }
+    }
+    return 'undefined';
+  },
+}
+
+
+//****************** RESULT VALUES *************//
+
+export const ResultValue = {
+  SUCCESS              : 0,     // Completed successfully.
+  WAIT_FOR_SUCCESS     : 1,     // Command is successful so far, but you need to wait for SUCCESS.
+  BUFFER_UNASSIGNED    : 16,    // No buffer was assigned for the command.
+  BUFFER_LOCKED        : 17,    // Buffer is locked, failed queue command.
+  WRONG_PAYLOAD_LENGTH : 32,    // Wrong payload lenght provided.
+  WRONG_PARAMETER      : 33,    // Wrong parameter provided.
+  INVALID_MESSAGE      : 34,    // invalid message provided.
+  UNKNOWN_OP_CODE      : 35,    // Unknown operation code provided.
+  UNKNOWN_TYPE         : 36,    // Unknown type provided.
+  NOT_FOUND            : 37,    // The thing you were looking for was not found.
+  NO_ACCESS            : 48,    // Invalid access for this command.
+  NOT_AVAILABLE        : 64,    // Command currently not available.
+  NOT_IMPLEMENTED      : 65,    // Command not implemented (not yet or not anymore).
+  WRITE_DISABLED       : 80,    // Write is disabled for given type.
+  ERR_WRITE_NOT_ALLOWED: 81,    // Direct write is not allowed for this type, use command instead.
+  ADC_INVALID_CHANNEL  : 96,    // Invalid adc input channel selected.
+}
+
+//****************** PROCESS TYPES *************//
+
+export const ProcessType = {
+  CONTINUE    : 0,
+  FINISHED    : 1,
+  ABORT_ERROR : 2,
+}

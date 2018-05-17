@@ -40,13 +40,13 @@ export class BLEPacket {
 
   loadUInt16(uint16) {
     this.payloadBuffer = Buffer.alloc(2);
-    this.payloadBuffer.writeUInt16BE(uint16);
+    this.payloadBuffer.writeUInt16LE(uint16);
     return this._process()
   }
 
   loadUInt32(uint32) {
     this.payloadBuffer = Buffer.alloc(4);
-    this.payloadBuffer.writeUInt32BE(uint32);
+    this.payloadBuffer.writeUInt32LE(uint32);
     return this._process()
   }
 
@@ -71,7 +71,7 @@ export class BLEPacket {
 
     buffer.writeUInt8(this.type, 0);
     buffer.writeUInt8(reserved, 1); // reserved
-    buffer.writeUInt16BE(this.length, 2); // length
+    buffer.writeUInt16LE(this.length, 2); // length
 
     if (this.length > 0 && this.payloadBuffer) {
       buffer = Buffer.concat([buffer, this.payloadBuffer])
@@ -90,7 +90,7 @@ export class keepAliveStatePacket extends ControlPacket {
     let keepAliveBuffer = Buffer.alloc(4);
     keepAliveBuffer.writeUInt8(action, 0);
     keepAliveBuffer.writeUInt8(state, 1);
-    keepAliveBuffer.writeUInt16BE(timeout, 2);
+    keepAliveBuffer.writeUInt16LE(timeout, 2);
 
     super(ControlType.KEEP_ALIVE_STATE)
     this.loadBuffer(keepAliveBuffer)
