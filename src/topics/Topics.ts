@@ -1,5 +1,7 @@
 
 
 export const Topics = {
-  advertisement: 'advertisement'
+  advertisement: 'advertisement',
+  peripheralDiscovered: 'peripheralDiscovered',
+  verifiedAdvertisement: 'verifiedAdvertisement',
 }

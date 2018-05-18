@@ -7,12 +7,15 @@ export class Advertisement {
   name = null;
   handle = null;
   rssi = null;
+  referenceId = null;
 
   serviceDataAvailable = false;
+  serviceUUID = null;
   scanResponse : ServiceData = null;
 
 
-  constructor(rawAdvertisement) {
+  constructor(rawAdvertisement, referenceId) {
+    this.referenceId = referenceId;
     this.parse(rawAdvertisement);
   }
 
@@ -29,6 +32,7 @@ export class Advertisement {
 
       if (ServiceUUIDArray.indexOf(uuid) !== -1) {
         this.serviceDataAvailable = true;
+        this.serviceUUID = uuid;
         this.scanResponse = new ServiceData(serviceDataArray[i].data);
         break;
       }
@@ -36,12 +40,14 @@ export class Advertisement {
   }
 
   isSetupPackage() {
-    console.log("isInDFUMode not implemented yet.")
+    if (this.scanResponse) {
+      return this.scanResponse.setupMode;
+    }
     return false
   }
 
   isInDFUMode() {
-    console.log("isInDFUMode not implemented yet.")
+    // console.log("isInDFUMode not implemented yet.")
     return false
   }
 
@@ -65,7 +71,7 @@ export class Advertisement {
   }
 
   hasScanResponse() {
-    return (this.serviceDataAvailable && this.scanResponse != null)
+    return (this.serviceDataAvailable && this.scanResponse != null);
   }
 
   setReadyForUse() {
@@ -75,7 +81,26 @@ export class Advertisement {
   }
 
   getJSON() {
-    return {};
+    let obj = {
+      handle: this.handle,
+      name: this.name,
+      rssi: this.rssi,
+      isCrownstoneFamily: this.isCrownstoneFamily(),
+      isInDFUMode: this.isInDFUMode(),
+      referenceId: this.referenceId
+    }
+
+    if (this.serviceUUID !== null) {
+      obj["serviceUUID"] = this.serviceUUID!
+    }
+
+    if (this.serviceDataAvailable) {
+      if (this.isCrownstoneFamily) {
+        obj["serviceData"] = this.scanResponse.getJSON()
+      }
+    }
+
+    return obj
   }
 }
 

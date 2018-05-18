@@ -1,3 +1,4 @@
+import {PromiseCallback} from "../types/declarations";
 
 export const emailChecker = function(email) {
   let reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -28,8 +29,8 @@ export const Util = {
     return Util.boundToUnity(value) * 100;
   },
 
-  getBitMaskUInt8(value) {
-    var result = [false, false, false, false, false, false, false, false];
+  getBitMaskUInt8: function(value) {
+    var result = Array(8).fill(false);
     let one = 1
     result[0] = (value & one) != 0
     result[1] = (value & (one << 1)) != 0
@@ -42,6 +43,29 @@ export const Util = {
     return result
   },
 
+  getBitMaskUInt32: function(value) {
+      var result = Array(32).fill(false);
+      let one = 1;
+
+      for (let i = 0; i < 32; i++) {
+        result[i] = (value & (one << i)) != 0;
+      }
+
+      return result;
+  },
+
+  UInt32FromBitmask : function(bitMask) {
+    let result = 0
+    let one = 1
+
+    for (let i = 0; i < 32; i++) {
+      if (bitMask[i]) {
+        result = (result | (one << i))
+      }
+    }
+
+    return result
+  },
 
   getUUID : () : string => {
     const S4 = function () {

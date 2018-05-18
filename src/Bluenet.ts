@@ -1,10 +1,13 @@
 import { BleHandler } from "./ble/BleHandler";
 import {BluenetSettings} from "./ble/BluenetSettings";
+import {eventBus} from "./util/EventBus";
 
 
 export default class Bluenet {
   ble: BleHandler;
   settings: BluenetSettings;
+
+  cache : any
 
   constructor() {
     this.settings = new BluenetSettings();
@@ -20,7 +23,7 @@ export default class Bluenet {
     return this.ble.isReady()
   }
 
-  connect() {
+  connect(peripheral) {
 
   }
 
@@ -29,10 +32,14 @@ export default class Bluenet {
   disconnect() {}
 
   startScanning() {
-    this.ble.startScanning()
+    return this.ble.startScanning()
   }
 
   stopScanning() {
     this.ble.stopScanning()
+  }
+
+  on(topic, callback) {
+    return eventBus.on(topic, callback);
   }
 }

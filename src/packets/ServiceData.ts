@@ -1,43 +1,44 @@
 import {DeviceType} from "../protocol/BluenetTypes";
 import {parseOpCode3, parseOpCode4, parseOpCode5, parseOpCode6} from "./parsers";
 import {BluenetSettings} from "../ble/BluenetSettings";
+import {CrownstoneErrors} from "./CrownstoneErrors";
 let aesjs = require('aes-js');
 
 export class ServiceData {
-  opCode             = 0
-  dataType           = 0
-  crownstoneId       = 0
-  switchState        = 0
-  flagsBitmask       = 0
-  temperature        = 0
-  powerFactor        = 1
-  powerUsageReal     = 0
-  powerUsageApparent = 0
-  accumulatedEnergy  = 0
-  setupMode          = false
-  stateOfExternalCrownstone = false
+  opCode             = 0;
+  dataType           = 0;
+  crownstoneId       = 0;
+  switchState        = 0;
+  flagsBitmask       = 0;
+  temperature        = 0;
+  powerFactor        = 1;
+  powerUsageReal     = 0;
+  powerUsageApparent = 0;
+  accumulatedEnergy  = 0;
+  setupMode          = false;
+  stateOfExternalCrownstone = false;
 
-  data : Buffer
-  encryptedData : Buffer
+  data : Buffer;
+  encryptedData : Buffer;
   encryptedDataStartIndex : number;
 
-  dimmingAvailable
-  dimmingAllowed
-  hasError
-  switchLocked
+  dimmingAvailable;
+  dimmingAllowed;
+  hasError;
+  switchLocked;
 
-  partialTimestamp
-  timestamp
+  partialTimestamp;
+  timestamp;
 
-  validation
+  validation;
 
-  errorTimestamp
-  errorsBitmask
-  errorMode
-  timeIsSet
-  switchCraftEnabled
+  errorTimestamp;
+  errorsBitmask;
+  errorMode;
+  timeIsSet;
+  switchCraftEnabled;
 
-  uniqueIdentifier
+  uniqueIdentifier;
 
   deviceType = 'undefined';
   rssiOfExternalCrownstone = 0
@@ -68,9 +69,11 @@ export class ServiceData {
       this.opCode = this.data.readUInt8(0)
       switch (this.opCode) {
         case 5:
-          parseOpCode5(this, this.data)
+          parseOpCode5(this, this.data);
+          break;
         case 6:
           parseOpCode6(this, this.data)
+          break;
         default:
           parseOpCode5(this, this.data)
       }
@@ -79,11 +82,13 @@ export class ServiceData {
       this.opCode = this.data[0]
       switch (this.opCode) {
         case 3:
-          parseOpCode3(this, this.data)
+          parseOpCode3(this, this.data);
+          break;
         case 4:
-          parseOpCode4(this, this.data)
+          parseOpCode4(this, this.data);
+          break;
         default:
-          parseOpCode3(this, this.data)
+          parseOpCode3(this, this.data);
       }
     }
     else {
@@ -95,7 +100,41 @@ export class ServiceData {
     return this.validData;
   }
 
-  getJSON() {}
+  getJSON() {
+    let errorsDictionary = new CrownstoneErrors(this.errorsBitmask).getJSON()
+    let obj = {
+      opCode                    : this.opCode,
+      dataType                  : this.dataType,
+      stateOfExternalCrownstone : this.stateOfExternalCrownstone,
+      hasError                  : this.hasError,
+      setupMode                 : this.isSetupPackage(),
+
+      crownstoneId              : this.crownstoneId,
+      switchState               : this.switchState,
+      flagsBitmask              : this.flagsBitmask,
+      temperature               : this.temperature,
+      powerFactor               : this.powerFactor,
+      powerUsageReal            : this.powerUsageReal,
+      powerUsageApparent        : this.powerUsageApparent,
+      accumulatedEnergy         : this.accumulatedEnergy,
+      timestamp                 : this.timestamp,
+      
+      dimmingAvailable          : this.dimmingAvailable,
+      dimmingAllowed            : this.dimmingAllowed,
+      switchLocked              : this.switchLocked,
+      switchCraftEnabled        : this.switchCraftEnabled,
+      
+      errorMode                 : this.errorMode,
+      errors                    : errorsDictionary,
+      
+      uniqueElement             : this.uniqueIdentifier,
+      timeIsSet                 : this.timeIsSet,
+      deviceType                : this.deviceType,
+      rssiOfExternalCrownstone  : this.rssiOfExternalCrownstone
+    }
+
+    return obj;
+  }
 
   isSetupPackage() {
     if (this.validData) {

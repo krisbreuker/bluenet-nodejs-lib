@@ -1,57 +1,79 @@
-import {Validator} from "./Validator";
 import {
   CROWNSTONE_PLUG_ADVERTISEMENT_SERVICE_UUID,
   CROWNSTONE_BUILTIN_ADVERTISEMENT_SERVICE_UUID,
   CROWNSTONE_GUIDESTONE_ADVERTISEMENT_SERVICE_UUID
 } from "../protocol/Services";
 import {BluenetSettings} from "./BluenetSettings";
+import {Scanner} from "./Scanner";
 
-var noble = require('noble');
 
 export class BleHandler {
-  nobleState = 'unknown';
-  validator : Validator;
+  scanner : Scanner;
   settings : BluenetSettings;
 
   constructor(settings) {
     this.settings = settings;
-    this.validator = new Validator(settings);
-
-    // <"unknown" | "resetting" | "unsupported" | "unauthorized" | "poweredOff" | "poweredOn">
-    noble.on('stateChange', (state) => {
-      this.nobleState = state;
-      console.log("StateChange",state)
-    });
+    this.scanner = new Scanner(settings);
   }
 
 
-  connect() {
-
-  }
-
-  isReady() {
+  /**
+   * Connect is either a handle or a peripheral object
+   * @param connectData
+   */
+  connect(connectData) {
+    let connectedPeripheral = null;
     return new Promise((resolve, reject) => {
-      let interval = setInterval(() => {
-        if (this.nobleState === 'poweredOn') {
-          clearInterval(interval);
-          resolve()
+      if (typeof connectData === 'object' && connectData.connect !== undefined) {
+        // connect to this.
+        resolve(connectData);
+      }
+      else {
+        // this is an UUID.
+        console.log("Trying to get Peripheral...")
+        return this.scanner.getPeripheral(connectData)
+          .then((peripheral) => {
+            resolve(peripheral)
+          })
+          .catch((err) => {
+            console.log("ERROR WHILE CONNECT", err);
+          })
+      }
+    })
+    .then((peripheral : any) => {
+      // connecting run
+      console.log("GOT PERIPHERAL")
+      connectedPeripheral = peripheral;
+      return new Promise((resolve, reject) => {
+        if (peripheral.connect) {
+          peripheral.once('connect', () => {
+            resolve();
+          })
+          peripheral.connect();
         }
-        else if (this.nobleState !== 'unknown') {
-          clearInterval(interval);
-          reject("Noble State (BLE-handling-lib) is not usable: " + this.nobleState);
+        else {
+          reject("Invalid peripheral to connect to.")
         }
-      }, 500);
+      })
+    })
+    .then(() => {
+      console.log("CONNETED!")
     })
   }
 
-  disconnect() {}
-
   startScanning() {
-    console.log("StartScanning")
-    noble.startScanning([CROWNSTONE_PLUG_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_BUILTIN_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_GUIDESTONE_ADVERTISEMENT_SERVICE_UUID], true);
+    return this.scanner.start();
   }
 
-  stopScanning() {}
+  stopScanning() {
+    this.scanner.stop();
+  }
+
+  isReady() {
+    return this.scanner.isReady();
+  }
+
+  disconnect() {}
 
   writeToCharacteristic() {}
 
