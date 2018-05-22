@@ -21,7 +21,14 @@ export class BleHandler {
    * Connect is either a handle or a peripheral object
    * @param connectData
    */
-  connect(connectData) {
+  connect(connectData, scanDuration) {
+    this._connect(connectData, scanDuration)
+      .then(() => {
+
+      })
+  }
+
+  _connect(connectData, scanDuration) {
     let connectedPeripheral = null;
     return new Promise((resolve, reject) => {
       if (typeof connectData === 'object' && connectData.connect !== undefined) {
@@ -31,8 +38,9 @@ export class BleHandler {
       else {
         // this is an UUID.
         console.log("Trying to get Peripheral...")
-        return this.scanner.getPeripheral(connectData)
+        return this.scanner.getPeripheral(connectData, scanDuration)
           .then((peripheral) => {
+            console.log("Peripheral obtained...")
             resolve(peripheral)
           })
           .catch((err) => {
@@ -40,25 +48,29 @@ export class BleHandler {
           })
       }
     })
-    .then((peripheral : any) => {
-      // connecting run
-      console.log("GOT PERIPHERAL")
-      connectedPeripheral = peripheral;
-      return new Promise((resolve, reject) => {
-        if (peripheral.connect) {
-          peripheral.once('connect', () => {
-            resolve();
-          })
-          peripheral.connect();
-        }
-        else {
-          reject("Invalid peripheral to connect to.")
-        }
+      .then((peripheral : any) => {
+        // connecting run
+        peripheral.once('servicesDiscover', (x) => { console.log('servicesDiscovered', x)});
+        peripheral.once('disconnect', (x) => { console.log('disconnect', x)});
+        peripheral.once('connect', (x) => { console.log('connect', x)});
+
+        connectedPeripheral = peripheral;
+        return new Promise((resolve, reject) => {
+          if (peripheral.connect) {
+            peripheral.once('connect', () => {
+              resolve();
+            })
+            console.log("CONNECTING here")
+            peripheral.connect((err) => { console.log("THRE WAS AN ERROR", err)});
+          }
+          else {
+            reject("Invalid peripheral to connect to.")
+          }
+        })
       })
-    })
-    .then(() => {
-      console.log("CONNETED!")
-    })
+      .then(() => {
+        console.log("CONNECTED!")
+      })
   }
 
   startScanning() {
@@ -75,13 +87,16 @@ export class BleHandler {
 
   disconnect() {}
 
-  writeToCharacteristic() {}
+  writeToCharacteristic(serviceId, characteristicId, data, encryptionEnabled = true) {
+
+  }
 
   readCharacteristic() {}
 
   readCharacteristicWithoutEncryption() {}
 
-  getCharacteristic() {}
+  getService(serviceId) {}
+  getCharacteristic(serviceId, characteristicId) {}
 
   setupSingleNotification() {}
 

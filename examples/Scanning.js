@@ -7,5 +7,5 @@ bluenet.setSettings({adminKey:'adminKeyForCrown', memberKey:'memberKeyForHome', 
 bluenet.startScanning().catch((err) => { console.log("Error while running example:", err); })
 
 // print scans.
-bluenet.on(BluenetLib.Topics.advertisement,         (data) => { console.log("Got advertisement"); })
-bluenet.on(BluenetLib.Topics.verifiedAdvertisement, (data) => { console.log(data); })
+bluenet.on(BluenetLib.Topics.advertisement,         (data) => { console.log("Got unverified advertisement"); })
+bluenet.on(BluenetLib.Topics.verifiedAdvertisement, (data) => { console.log("verified:",data); })

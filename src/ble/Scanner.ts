@@ -60,11 +60,13 @@ export class Scanner {
   start() {
     return this.isReady()
       .then(() => {
-        this.scanningInProgress = true;
-        noble.startScanning(
-          [CROWNSTONE_PLUG_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_BUILTIN_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_GUIDESTONE_ADVERTISEMENT_SERVICE_UUID],
-          true
-        );
+        if (this.scanningInProgress !== true) {
+          this.scanningInProgress = true;
+          noble.startScanning(
+            [CROWNSTONE_PLUG_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_BUILTIN_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_GUIDESTONE_ADVERTISEMENT_SERVICE_UUID],
+            true
+          );
+        }
       })
   }
 
@@ -82,55 +84,34 @@ export class Scanner {
    * @param uuid
    * @returns {Promise<any>}
    */
-  getPeripheral(uuid) {
+  getPeripheral(uuid, scanDuration = 15000) {
     return new Promise((resolve, reject) => {
       if (this.cache[uuid] === undefined) {
         let timeout = null;
-        console.log("Peripheral not cached. Scanning...");
-        if (this.scanningInProgress) {
-          let unsubscribe = eventBus.on(Topics.peripheralDiscovered, (peripheral) => {
-            // found a match!
-            if ( peripheral.uuid === uuid ) {
-              // success! stop the timeout.
-              clearTimeout(timeout);
+        console.log("Peripheral not cached. Starting scan...");
+        this.start()
+          .then(() => {
+            console.log("Scan started...");
+            let unsubscribe = eventBus.on(Topics.peripheralDiscovered, (peripheral) => {
+              // found a match!
+              if ( peripheral.uuid === uuid ) {
+                // success! stop the timeout.
+                clearTimeout(timeout);
 
-              // unsub from this event
-              unsubscribe();
+                // unsub from this event
+                unsubscribe();
 
-              // here it is!
-              resolve(peripheral);
-            }
-          });
+                // here it is!
+                noble.once('scanStop',  () => { setTimeout(() => { resolve(peripheral); },500);});
 
-          // scan for 3 seconds for this uuid.
-          timeout = setTimeout(() => { unsubscribe(); reject(null); }, 3000);
-        }
-        else {
-          console.log("Peripheral not cached. Starting scan...");
-          this.start()
-            .then(() => {
-              console.log("Scan started...");
-              let unsubscribe = eventBus.on(Topics.peripheralDiscovered, (peripheral) => {
-                // found a match!
-                if ( peripheral.uuid === uuid ) {
-                  // success! stop the timeout.
-                  clearTimeout(timeout);
+                // stop scanning
+                this.stop();
+              }
+            });
 
-                  // unsub from this event
-                  unsubscribe();
-
-                  // stop scanning
-                  this.stop();
-
-                  // here it is!
-                  resolve(peripheral);
-                }
-              });
-
-              // scan for 3 seconds for this uuid, then stop and fail.
-              timeout = setTimeout(() => { unsubscribe(); reject(null); this.stop();}, 3000);
-            })
-        }
+            // scan for 3 seconds for this uuid, then stop and fail.
+            timeout = setTimeout(() => { unsubscribe(); reject(null); this.stop();}, scanDuration);
+          })
       }
       else {
         resolve(this.cache[uuid]);

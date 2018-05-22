@@ -23,8 +23,8 @@ export default class Bluenet {
     return this.ble.isReady()
   }
 
-  connect(peripheral) {
-
+  connect(connectData, scanDuration) {
+    this.ble.connect(connectData, scanDuration)
   }
 
   setupCrownstone() {}
