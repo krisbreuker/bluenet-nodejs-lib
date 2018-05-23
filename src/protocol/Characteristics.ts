@@ -4,59 +4,59 @@ export const DeviceCharacteristics = {
 }
 
 export const CrownstoneCharacteristics = {
-  Control           : "24f00001-7d10-4805-bfc1-7663a01c3bff",
-  MeshControl       : "24f00002-7d10-4805-bfc1-7663a01c3bff",
-  ConfigControl     : "24f00004-7d10-4805-bfc1-7663a01c3bff",
-  ConfigRead        : "24f00005-7d10-4805-bfc1-7663a01c3bff",
-  StateControl      : "24f00006-7d10-4805-bfc1-7663a01c3bff",
-  StateRead         : "24f00007-7d10-4805-bfc1-7663a01c3bff",
-  SessionNonce      : "24f00008-7d10-4805-bfc1-7663a01c3bff",
-  FactoryReset      : "24f00009-7d10-4805-bfc1-7663a01c3bff",
+  Control           : "24f000017d104805bfc17663a01c3bff",
+  MeshControl       : "24f000027d104805bfc17663a01c3bff",
+  ConfigControl     : "24f000047d104805bfc17663a01c3bff",
+  ConfigRead        : "24f000057d104805bfc17663a01c3bff",
+  StateControl      : "24f000067d104805bfc17663a01c3bff",
+  StateRead         : "24f000077d104805bfc17663a01c3bff",
+  SessionNonce      : "24f000087d104805bfc17663a01c3bff",
+  FactoryReset      : "24f000097d104805bfc17663a01c3bff",
 }
 
 export const SetupCharacteristics = {
-  Control           : "24f10001-7d10-4805-bfc1-7663a01c3bff",
-  MacAddress        : "24f10002-7d10-4805-bfc1-7663a01c3bff",
-  SessionKey        : "24f10003-7d10-4805-bfc1-7663a01c3bff",
-  ConfigControl     : "24f10004-7d10-4805-bfc1-7663a01c3bff",
-  ConfigRead        : "24f10005-7d10-4805-bfc1-7663a01c3bff",
-  GoToDFU           : "24f10006-7d10-4805-bfc1-7663a01c3bff",
-  SessionNonce      : "24f10008-7d10-4805-bfc1-7663a01c3bff",
+  Control           : "24f100017d104805bfc17663a01c3bff",
+  MacAddress        : "24f100027d104805bfc17663a01c3bff",
+  SessionKey        : "24f100037d104805bfc17663a01c3bff",
+  ConfigControl     : "24f100047d104805bfc17663a01c3bff",
+  ConfigRead        : "24f100057d104805bfc17663a01c3bff",
+  GoToDFU           : "24f100067d104805bfc17663a01c3bff",
+  SessionNonce      : "24f100087d104805bfc17663a01c3bff",
 }
 
 export const GeneralCharacteristics = {
-  Temperature       : "24f20001-7d10-4805-bfc1-7663a01c3bff",
-  Reset             : "24f20002-7d10-4805-bfc1-7663a01c3bff",
+  Temperature       : "24f200017d104805bfc17663a01c3bff",
+  Reset             : "24f200027d104805bfc17663a01c3bff",
 }
 
 export const PowerCharacteristics = {
-  PWM               : "24f30001-7d10-4805-bfc1-7663a01c3bff",
-  Relay             : "24f30002-7d10-4805-bfc1-7663a01c3bff",
-  PowerSamples      : "24f30003-7d10-4805-bfc1-7663a01c3bff",
-  PowerConsumption  : "24f30004-7d10-4805-bfc1-7663a01c3bff",
+  PWM               : "24f300017d104805bfc17663a01c3bff",
+  Relay             : "24f300027d104805bfc17663a01c3bff",
+  PowerSamples      : "24f300037d104805bfc17663a01c3bff",
+  PowerConsumption  : "24f300047d104805bfc17663a01c3bff",
 }
 
 export const IndoorLocalizationCharacteristics = {
-  TrackControl      : "24f40001-7d10-4805-bfc1-7663a01c3bff",
-  TrackedDevices    : "24f40002-7d10-4805-bfc1-7663a01c3bff",
-  ScanControl       : "24f40003-7d10-4805-bfc1-7663a01c3bff",
-  ScannedDevices    : "24f40004-7d10-4805-bfc1-7663a01c3bff",
-  RSSI              : "24f40005-7d10-4805-bfc1-7663a01c3bff",
+  TrackControl      : "24f400017d104805bfc17663a01c3bff",
+  TrackedDevices    : "24f400027d104805bfc17663a01c3bff",
+  ScanControl       : "24f400037d104805bfc17663a01c3bff",
+  ScannedDevices    : "24f400047d104805bfc17663a01c3bff",
+  RSSI              : "24f400057d104805bfc17663a01c3bff",
 }
 
 export const ScheduleCharacteristics = {
-  SetTime           : "24f50001-7d10-4805-bfc1-7663a01c3bff",
-  ScheduleWrite     : "24f50002-7d10-4805-bfc1-7663a01c3bff",
-  ScheduleRead      : "24f50003-7d10-4805-bfc1-7663a01c3bff",
+  SetTime           : "24f500017d104805bfc17663a01c3bff",
+  ScheduleWrite     : "24f500027d104805bfc17663a01c3bff",
+  ScheduleRead      : "24f500037d104805bfc17663a01c3bff",
 }
 
 export const MeshCharacteristics = {
-  MeshData          : "2a1e0004-fd51-d882-8ba8-b98c0000cd1e",
-  Value             : "2a1e0005-fd51-d882-8ba8-b98c0000cd1e",
+  MeshData          : "2a1e0004fd51d8828ba8b98c0000cd1e",
+  Value             : "2a1e0005fd51d8828ba8b98c0000cd1e",
 }
 
 export const DFUCharacteristics = {
-  ControlPoint      : "00001531-1212-EFDE-1523-785FEABCD123",
-  Packet            : "00001532-1212-EFDE-1523-785FEABCD123",
+  ControlPoint      : "000015311212EFDE1523785FEABCD123",
+  Packet            : "000015321212EFDE1523785FEABCD123",
 }
 

@@ -1,0 +1,3 @@
+
+
+global["BLUENET_ENCRYPTION_TESTING"] = true

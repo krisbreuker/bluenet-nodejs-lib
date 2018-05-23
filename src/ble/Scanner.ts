@@ -25,6 +25,7 @@ export class Scanner {
 
     // <"unknown" | "resetting" | "unsupported" | "unauthorized" | "poweredOff" | "poweredOn">
     noble.on('stateChange', (state) => {
+      console.log("Noble State Changed", state);
       this.nobleState = state;
     });
 
@@ -76,6 +77,11 @@ export class Scanner {
       noble.stopScanning();
       this.scanningInProgress = false;
     }
+  }
+
+  quit() {
+    console.log("Quit")
+    noble.removeAllListeners();
   }
 
 

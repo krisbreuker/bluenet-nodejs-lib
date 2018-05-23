@@ -65,8 +65,8 @@ export class BLEPacket {
     return this;
   }
 
-  getPacket(reserved = 0) {
-    let packetLength = 1 + 1 + 2 + this.length;
+  getPacket(reserved = 0) : Buffer {
+    let packetLength = 1 + 1 + 2;
     let buffer = Buffer.alloc(packetLength);
 
     buffer.writeUInt8(this.type, 0);

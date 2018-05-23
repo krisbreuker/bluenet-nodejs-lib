@@ -26,9 +26,9 @@ export class Advertisement {
     this.rssi = rawAdvertisement.rssi;
 
     let serviceDataArray = rawAdvertisement.advertisement.serviceData;
-    for (let i = 0; serviceDataArray.length; i++) {
+    for (let i = 0; i < serviceDataArray.length; i++) {
       if (!serviceDataArray[i]) { continue; }
-      let uuid = serviceDataArray[i].uuid.toUpperCase();
+      let uuid = serviceDataArray[i].uuid.toLowerCase();
 
       if (ServiceUUIDArray.indexOf(uuid) !== -1) {
         this.serviceDataAvailable = true;

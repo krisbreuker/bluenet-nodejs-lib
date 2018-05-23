@@ -2,11 +2,11 @@ import { ControlPacket, FactoryResetPacket, keepAliveStatePacket } from './BlePa
 import {ControlType} from './BluenetTypes';
 import {Util} from "../util/Util";
 
-class ControlPacketsGenerator {
+export class ControlPacketsGenerator {
 
   static getFactoryResetPacket() {
     let buffer = Buffer.alloc(4);
-    buffer.writeUInt32BE(0xdeadbeef,0);
+    buffer.writeUInt32LE(0xdeadbeef,0);
     return buffer
   }
 

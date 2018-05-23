@@ -1,13 +1,14 @@
 import {DeviceType} from "../protocol/BluenetTypes";
-import {parseOpCode3, parseOpCode4, parseOpCode5, parseOpCode6} from "./parsers";
+import {parseOpCode3, parseOpCode4, parseOpCode5, parseOpCode6} from "./Parsers";
 import {BluenetSettings} from "../ble/BluenetSettings";
 import {CrownstoneErrors} from "./CrownstoneErrors";
+import {EncryptionHandler} from "../util/EncryptionHandler";
 let aesjs = require('aes-js');
 
 export class ServiceData {
   opCode             = 0;
   dataType           = 0;
-  crownstoneId       = 0;
+  crownstoneId       = 0; 
   switchState        = 0;
   flagsBitmask       = 0;
   temperature        = 0;
@@ -146,15 +147,10 @@ export class ServiceData {
 
   decrypt(key) {
     if (this.validData && this.encryptedData.length === 16) {
-      let aesEcb = new aesjs.ModeOfOperation.ecb(key);
-
-      let decrypted = aesEcb.decrypt(this.encryptedData);
-      // convert from UInt8Array to Buffer
-      let decryptedBuffer = Buffer.from(decrypted);
+      let decrypted = EncryptionHandler.decryptAdvertisement(this.encryptedData, key)
 
       // copy decrypted data back in to data buffer.
-      decryptedBuffer.copy(this.data, this.encryptedDataStartIndex);
-
+      decrypted.copy(this.data, this.encryptedDataStartIndex);
       this.dataReadyForUse = true;
     }
   }

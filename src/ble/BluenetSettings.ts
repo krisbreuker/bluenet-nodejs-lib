@@ -8,20 +8,20 @@ export const UserLevel = {
 
 
 export class BluenetSettings {
-  encryptionEnabled = true
+  encryptionEnabled = true;
 
-  adminKey  : Buffer = null
-  memberKey : Buffer = null
-  guestKey  : Buffer = null
-  setupKey  : Buffer = null
+  adminKey  : Buffer = null;
+  memberKey : Buffer = null;
+  guestKey  : Buffer = null;
+  setupKey  : Buffer = null;
 
-  referenceId  = null
-  sessionNonce = null
+  referenceId  : string = null;
+  sessionNonce : Buffer = null;
 
-  initializedKeys  = false
-  temporaryDisable = false
+  initializedKeys  = false;
+  temporaryDisable = false;
 
-  userLevel = UserLevel.unknown
+  userLevel = UserLevel.unknown;
 
 
   loadKeys(encryptionEnabled, adminKey : string = null, memberKey : string = null, guestKey : string = null, referenceId) {
@@ -69,11 +69,11 @@ export class BluenetSettings {
     this.sessionNonce = null
   }
 
-  setSessionNonce(this, sessionNonce) {
+  setSessionNonce(sessionNonce) {
     this.sessionNonce = sessionNonce
   }
 
-  loadSetupKey(this, setupKey) {
+  loadSetupKey(setupKey) {
     this.setupKey = setupKey
     this.userLevel = UserLevel.setup
   }
