@@ -182,6 +182,16 @@ class BleHandler {
         this.scanner.quit();
     }
     getService(serviceId) {
+        return new Promise((resolve, reject) => {
+            if (!this.connectedPeripheral) {
+                return reject("NOT CONNECTED");
+            }
+            let service = this.connectedPeripheral.services[serviceId];
+            if (!service) {
+                return reject("Service Unknown:" + serviceId + " in list:" + JSON.stringify(Object.keys(this.connectedPeripheral.services)));
+            }
+            resolve(service);
+        });
     }
     getCharacteristic(serviceId, characteristicId) {
         return new Promise((resolve, reject) => {

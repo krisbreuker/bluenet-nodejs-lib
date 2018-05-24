@@ -10,3 +10,12 @@ interface TrackerMap {
 interface Cache {
   [key: string]: {advertisement: Advertisement, peripheral: any}
 }
+
+interface requestOptions {
+  data?: any,
+  background?: boolean,
+  noAccessToken?: boolean,
+
+}
+
+type requestType = 'query' | 'body';

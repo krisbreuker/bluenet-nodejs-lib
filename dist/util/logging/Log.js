@@ -63,6 +63,7 @@ class Logger {
                 let arg = allArguments[i];
                 args.push(arg);
             }
+            console.log.apply(this, args);
         }
     }
     _logType(type, configCheckField, forcedLevel, allArguments) {
@@ -72,6 +73,7 @@ class Logger {
                 let arg = allArguments[i];
                 args.push(arg);
             }
+            console.log.apply(this, args);
         }
     }
 }

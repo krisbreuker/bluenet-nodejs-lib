@@ -81,6 +81,7 @@ export class Logger {
         let arg = allArguments[i];
         args.push(arg);
       }
+      console.log.apply(this, args);
     }
   }
 
@@ -91,6 +92,7 @@ export class Logger {
         let arg = allArguments[i];
         args.push(arg);
       }
+      console.log.apply(this, args);
     }
   }
 }

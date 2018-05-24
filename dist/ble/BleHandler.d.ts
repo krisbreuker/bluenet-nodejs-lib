@@ -24,7 +24,7 @@ export declare class BleHandler {
     readCharacteristic(serviceId: any, characteristicId: any, encryptionEnabled?: boolean): Promise<Buffer>;
     readCharacteristicWithoutEncryption(serviceId: any, characteristicId: any): Promise<Buffer>;
     quit(): void;
-    getService(serviceId: any): void;
+    getService(serviceId: any): Promise<{}>;
     getCharacteristic(serviceId: any, characteristicId: any): Promise<any>;
     setupSingleNotification(): void;
     setupNotificationStream(): void;

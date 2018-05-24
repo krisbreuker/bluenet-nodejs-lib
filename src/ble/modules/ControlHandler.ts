@@ -1,8 +1,8 @@
-import {BleHandler} from "../../BleHandler";
-import {CrownstoneCharacteristics} from "../../../protocol/Characteristics";
-import {CSServices} from "../../../protocol/Services";
-import {EncryptionHandler} from "../../../util/EncryptionHandler";
-import {ControlPacketsGenerator} from "../../../protocol/ControlPackets";
+import {BleHandler} from "../BleHandler";
+import {CrownstoneCharacteristics} from "../../protocol/Characteristics";
+import {CSServices} from "../../protocol/Services";
+import {EncryptionHandler} from "../../util/EncryptionHandler";
+import {ControlPacketsGenerator} from "../../protocol/ControlPackets";
 
 
 export class ControlHandler {

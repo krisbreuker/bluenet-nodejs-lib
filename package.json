@@ -11,19 +11,27 @@
   "dependencies": {
     "aes-js": "^3.1.1",
     "jest": "^22.4.4",
-    "noble": "^1.9.1"
+    "sha-1": "~0.1.1",
+    "noble": "^1.9.1",
+    "node-fetch": "^2.1.2"
   },
   "devDependencies": {
-    "@types/node": "^10.0.8",
     "@types/jest": "^22.2.3",
+    "@types/node": "^10.0.8",
     "typescript": "^2.8.3"
   },
   "jest": {
-    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
     "transform": {
       "^.+\\.(ts|tsx)$": "./tests/jest_preprocessor.js"
     },
-    "testMatch": ["**/tests/*.test.+(ts|tsx|js)"],
+    "testMatch": [
+      "**/tests/*.test.+(ts|tsx|js)"
+    ],
     "setupFiles": [
       "./tests/jest_setup.js"
     ],

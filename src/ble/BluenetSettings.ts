@@ -38,6 +38,8 @@ export class BluenetSettings {
   }
 
   _prepKey(key) {
+    if (!key) { return Buffer.alloc(16) }
+
     if (key.length === 16) {
       return Buffer.from(key, 'ascii');
     }
