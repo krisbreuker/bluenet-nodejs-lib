@@ -93,7 +93,7 @@ class Scanner {
                 });
             }
             else {
-                resolve(this.cache[uuid]);
+                resolve(this.cache[uuid].peripheral);
             }
         })
             .catch((err) => {

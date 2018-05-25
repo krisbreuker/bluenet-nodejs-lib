@@ -5,11 +5,14 @@ const BluenetSettings_1 = require("./ble/BluenetSettings");
 const EventBus_1 = require("./util/EventBus");
 const ControlHandler_1 = require("./ble/modules/ControlHandler");
 const CloudHandler_1 = require("./ble/modules/CloudHandler");
+const Topics_1 = require("./topics/Topics");
+const SetupHandler_1 = require("./ble/modules/SetupHandler");
 class Bluenet {
     constructor() {
         this.settings = new BluenetSettings_1.BluenetSettings();
         this.ble = new BleHandler_1.BleHandler(this.settings);
         this.control = new ControlHandler_1.ControlHandler(this.ble);
+        this.setup = new SetupHandler_1.SetupHandler(this.ble);
         this.cloud = new CloudHandler_1.CloudHandler();
     }
     setSettings(keys, referenceId = "BluenetNodeJSLib", encryptionEnabled = true) {
@@ -29,18 +32,21 @@ class Bluenet {
         else {
             return this.cloud.login(userData)
                 .then(() => {
-                return this.cloud.getKeys(userData.sphereCloudId);
+                return this.cloud.getKeys(userData.sphereId);
             })
                 .then((keys) => {
                 this.settings.loadKeys(true, keys.admin, keys.member, keys.guest, "CloudData");
             });
         }
     }
-    connect(connectData, scanDuration) {
+    connect(connectData, scanDuration = 5) {
         return this.ble.connect(connectData, scanDuration)
             .then(() => {
             console.log("getting Session Nonce");
             return this.control.getAndSetSessionNonce();
+        })
+            .then(() => {
+            console.log("Ready!");
         });
     }
     wait(seconds) {
@@ -48,7 +54,12 @@ class Bluenet {
             setTimeout(() => { resolve(); }, seconds * 1000);
         });
     }
-    setupCrownstone() { }
+    setupCrownstone(handle, crownstoneId, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
+        return this.connect(handle)
+            .then(() => {
+            return this.setup.setup(crownstoneId, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor);
+        });
+    }
     disconnect() {
         return this.ble.disconnect();
     }
@@ -63,6 +74,54 @@ class Bluenet {
     }
     on(topic, callback) {
         return EventBus_1.eventBus.on(topic, callback);
+    }
+    getNearestCrownstone(rssiAtLeast = -100, scanDuration = 5, returnFirstAcceptable = false, addressesToExclude = []) {
+        return this._getNearest(false, false, rssiAtLeast, scanDuration, returnFirstAcceptable, addressesToExclude);
+    }
+    getNearestSetupStone(rssiAtLeast = -100, scanDuration = 5, returnFirstAcceptable = false, addressesToExclude = []) {
+        return this._getNearest(true, true, rssiAtLeast, scanDuration, returnFirstAcceptable, addressesToExclude);
+    }
+    _getNearest(setupMode, verifiedOnly, rssiAtLeast = -100, scanDuration = 5, returnFirstAcceptable = false, addressesToExclude = []) {
+        return new Promise((resolve, reject) => {
+            let fallbackTimeout = null;
+            let unsubscribe = null;
+            let results = [];
+            let finalize = () => {
+                clearTimeout(fallbackTimeout);
+                unsubscribe();
+                this.stopScanning();
+                if (results.length > 0) {
+                    results.sort((a, b) => { return a.rssi - b.rssi; });
+                    resolve(results[0]);
+                }
+                else {
+                    reject("Timeout: No stones found");
+                }
+            };
+            fallbackTimeout = setTimeout(() => { finalize(); }, scanDuration * 1000);
+            let checkResults = (data) => {
+                if (addressesToExclude.indexOf(data.handle) !== -1) {
+                    return;
+                }
+                if (data.rssi >= rssiAtLeast) {
+                    results.push(data);
+                    if (returnFirstAcceptable) {
+                        finalize();
+                    }
+                }
+            };
+            if (verifiedOnly || setupMode) {
+                unsubscribe = this.on(Topics_1.Topics.verifiedAdvertisement, (data) => {
+                    checkResults(data);
+                });
+            }
+            else {
+                unsubscribe = this.on(Topics_1.Topics.advertisement, (data) => {
+                    checkResults(data);
+                });
+            }
+            this.startScanning();
+        });
     }
 }
 exports.default = Bluenet;

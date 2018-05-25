@@ -1,0 +1,8 @@
+{
+  "email":"x@gmail.com",
+  "password":"myPassword",
+  "sha1Password":"hashOfMyPassword",
+  "userId": "myCloudUserId",
+  "token": "myCloudAccessToken",
+  "sphereId": "myCloudSphereId"
+}

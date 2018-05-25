@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const BluenetSettings_1 = require("../ble/BluenetSettings");
+const BluenetError_1 = require("../BluenetError");
 var crypto = require('crypto');
 const aesjs = require('aes-js');
 let BLOCK_LENGTH = 16;
@@ -25,10 +26,10 @@ class AESCounter {
 class EncryptionHandler {
     static decryptSessionNonce(rawNonce, key) {
         if (key.length !== 16) {
-            throw "Invalid Key";
+            throw new BluenetError_1.BluenetError(BluenetError_1.BluenetErrorType.INPUT_ERROR, "Invalid Key");
         }
         if (rawNonce.length !== 16) {
-            throw "Invalid Payload for sessionNonce decrypting!";
+            throw new BluenetError_1.BluenetError(BluenetError_1.BluenetErrorType.INPUT_ERROR, "Invalid Payload for sessionNonce decrypting!");
         }
         var aesEcb = new aesjs.ModeOfOperation.ecb(key);
         var decrypted = Buffer.from(aesEcb.decrypt(rawNonce));
@@ -37,7 +38,7 @@ class EncryptionHandler {
             return decrypted.slice(4, 4 + SESSION_DATA_LENGTH);
         }
         else {
-            throw "Could not validate Session Nonce";
+            throw new BluenetError_1.BluenetError(BluenetError_1.BluenetErrorType.COULD_NOT_VALIDATE_SESSION_NONCE, "Could not validate Session Nonce", 301);
         }
     }
     static encrypt(data, settings) {

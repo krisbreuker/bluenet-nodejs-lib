@@ -138,7 +138,7 @@ export class ServiceData {
   }
 
   isSetupPackage() {
-    if (this.validData) {
+    if (!this.validData) {
       return false
     }
 

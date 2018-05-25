@@ -1,5 +1,6 @@
 import {BluenetSettings, UserLevel} from "../ble/BluenetSettings";
 import {Session} from "inspector";
+import {BluenetError, BluenetErrorType} from "../BluenetError";
 var crypto = require('crypto')
 const aesjs = require('aes-js');
 
@@ -37,8 +38,8 @@ class AESCounter {
 export class EncryptionHandler {
 
   static decryptSessionNonce(rawNonce: Buffer, key: Buffer) {
-    if (key.length      !== 16) { throw "Invalid Key"; }
-    if (rawNonce.length !== 16) { throw "Invalid Payload for sessionNonce decrypting!"; }
+    if (key.length      !== 16) { throw new BluenetError(BluenetErrorType.INPUT_ERROR, "Invalid Key"); }
+    if (rawNonce.length !== 16) { throw new BluenetError(BluenetErrorType.INPUT_ERROR, "Invalid Payload for sessionNonce decrypting!"); }
 
     var aesEcb = new aesjs.ModeOfOperation.ecb(key);
     var decrypted = Buffer.from(aesEcb.decrypt(rawNonce));
@@ -48,7 +49,7 @@ export class EncryptionHandler {
       return decrypted.slice(4,4+SESSION_DATA_LENGTH);
     }
     else {
-      throw "Could not validate Session Nonce";
+      throw new BluenetError(BluenetErrorType.COULD_NOT_VALIDATE_SESSION_NONCE, "Could not validate Session Nonce", 301);
     }
   }
 

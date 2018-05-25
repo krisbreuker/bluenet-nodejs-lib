@@ -9,6 +9,7 @@ import {
   CROWNSTONE_GUIDESTONE_ADVERTISEMENT_SERVICE_UUID,
   CROWNSTONE_PLUG_ADVERTISEMENT_SERVICE_UUID
 } from "../protocol/Services";
+import {publicDecrypt} from "crypto";
 
 var noble = require('noble');
 
@@ -106,7 +107,7 @@ export class Scanner {
 
                 // unsub from this event
                 unsubscribe();
-
+                
                 // here it is!
                 noble.once('scanStop',  () => { setTimeout(() => { resolve(peripheral); },500);});
 
@@ -120,7 +121,7 @@ export class Scanner {
           })
       }
       else {
-        resolve(this.cache[uuid]);
+        resolve(this.cache[uuid].peripheral);
       }
     })
       .catch((err) => {

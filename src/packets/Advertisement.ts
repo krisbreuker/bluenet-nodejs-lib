@@ -59,6 +59,10 @@ export class Advertisement {
   }
 
   decrypt(key) {
+    if (!key) {
+      throw "Encryption is enabled but no guest key is provided!"
+    }
+
     if (this.scanResponse) {
       this.scanResponse.decrypt(key);
     }

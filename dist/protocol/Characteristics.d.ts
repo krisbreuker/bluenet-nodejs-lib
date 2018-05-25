@@ -19,6 +19,7 @@ export declare const SetupCharacteristics: {
     ConfigControl: string;
     ConfigRead: string;
     GoToDFU: string;
+    SetupControl: string;
     SessionNonce: string;
 };
 export declare const GeneralCharacteristics: {

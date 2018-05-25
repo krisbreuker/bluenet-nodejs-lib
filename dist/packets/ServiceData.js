@@ -102,7 +102,7 @@ class ServiceData {
         return obj;
     }
     isSetupPackage() {
-        if (this.validData) {
+        if (!this.validData) {
             return false;
         }
         return this.setupMode;

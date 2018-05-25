@@ -21,6 +21,7 @@ export const SetupCharacteristics = {
   ConfigControl     : "24f100047d104805bfc17663a01c3bff",
   ConfigRead        : "24f100057d104805bfc17663a01c3bff",
   GoToDFU           : "24f100067d104805bfc17663a01c3bff",
+  SetupControl      : "24f100077d104805bfc17663a01c3bff",
   SessionNonce      : "24f100087d104805bfc17663a01c3bff",
 }
 

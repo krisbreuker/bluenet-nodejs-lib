@@ -3,6 +3,7 @@ import {CrownstoneCharacteristics} from "../../protocol/Characteristics";
 import {CSServices} from "../../protocol/Services";
 import {EncryptionHandler} from "../../util/EncryptionHandler";
 import {ControlPacketsGenerator} from "../../protocol/ControlPackets";
+import {BluenetErrorType} from "../../BluenetError";
 
 
 export class ControlHandler {
@@ -22,6 +23,11 @@ export class ControlHandler {
         console.log("Decrypted Nonce", decryptedNonce)
         this.ble.settings.setSessionNonce(decryptedNonce);
         console.log("Set Nonce")
+      })
+      .catch((err) => {
+        if (err.type == BluenetErrorType.COULD_NOT_VALIDATE_SESSION_NONCE) {
+          throw err;
+        }
       })
   }
 
