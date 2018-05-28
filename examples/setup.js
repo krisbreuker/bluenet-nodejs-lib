@@ -6,7 +6,7 @@ bluenet.setSettings({adminKey:'adminKeyForCrown', memberKey:'memberKeyForHome', 
 
 bluenet.getNearestSetupStone(rssiAtLeast = -80, returnFirstAcceptable = true)
   .then((peripheral) => {
-    bluenet.setupCrownstone(peripheral.handle, 1, '4f745905', '1843423e-e175-4af0-a2e4-31e32f729a8a', 123, 456)
+    return bluenet.setupCrownstone(peripheral.handle, 1, '4f745905', '1843423e-e175-4af0-a2e4-31e32f729a8a', 123, 456)
   })
   .catch((err) => { console.log("couldntSETUP", err) })
 

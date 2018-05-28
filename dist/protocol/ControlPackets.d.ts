@@ -32,4 +32,5 @@ export declare class ControlPacketsGenerator {
     static getSetTimePacket(time: any): Buffer;
     static getAllowDimmingPacket(allow: any): Buffer;
     static getLockSwitchPacket(lock: any): Buffer;
+    static getSetupPacket(type: any, crownstoneId: any, adminKey: Buffer, memberKey: Buffer, guestKey: Buffer, meshAccessAddress: any, ibeaconUUID: any, ibeaconMajor: any, ibeaconMinor: any): Buffer;
 }

@@ -20,12 +20,14 @@ export declare class BleHandler {
     stopScanning(): void;
     isReady(): Promise<{}>;
     disconnect(): Promise<{}>;
+    waitForPeripheralToDisconnect(timeoutInSeconds: any): Promise<{}>;
+    errorDisconnect(): Promise<void | {}>;
     writeToCharacteristic(serviceId: any, characteristicId: any, data: any, encryptionEnabled?: boolean): Promise<void>;
     readCharacteristic(serviceId: any, characteristicId: any, encryptionEnabled?: boolean): Promise<Buffer>;
     readCharacteristicWithoutEncryption(serviceId: any, characteristicId: any): Promise<Buffer>;
     quit(): void;
     getService(serviceId: any): Promise<{}>;
     getCharacteristic(serviceId: any, characteristicId: any): Promise<any>;
-    setupSingleNotification(): void;
-    setupNotificationStream(): void;
+    setupSingleNotification(serviceId: any, characteristicId: any, writeCommand: any): Promise<{}>;
+    setupNotificationStream(serviceId: any, characteristicId: any, writeCommand: any, processHandler: any, timeout?: number): Promise<{}>;
 }

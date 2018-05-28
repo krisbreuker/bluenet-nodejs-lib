@@ -29,6 +29,10 @@ class ControlHandler {
         let packet = ControlPackets_1.ControlPacketsGenerator.getSwitchStatePacket(switchState);
         return this._writeControlPacket(packet);
     }
+    commandFactoryReset() {
+        let packet = ControlPackets_1.ControlPacketsGenerator.getCommandFactoryResetPacket();
+        return this._writeControlPacket(packet);
+    }
     disconnect() {
         let packet = ControlPackets_1.ControlPacketsGenerator.getDisconnectPacket();
         return this._writeControlPacket(packet);

@@ -10,3 +10,11 @@ console.log(b, a);
 console.log(b[7])
 console.log(b[7]++)
 console.log(b[7]++)
+
+let c = Buffer.alloc(0);
+
+c = Buffer.concat([c,b.slice(1)])
+
+console.log('b', b)
+console.log('c', c)
+console.log('crev', c.reverse())

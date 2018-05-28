@@ -19,8 +19,8 @@ class Scanner {
             this.nobleState = state;
         });
         // scan events
-        noble.on('scanStart', () => { console.log("scanStart"); });
-        noble.on('scanStop', () => { console.log("scanStop"); });
+        noble.on('scanStart', () => { });
+        noble.on('scanStop', () => { });
         noble.on('discover', (advertisement) => { this.discover(advertisement); });
         noble.on('warning', (warning) => { console.log("warning", warning); });
     }

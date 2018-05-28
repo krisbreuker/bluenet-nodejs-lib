@@ -3,8 +3,8 @@ import { BluenetSettings } from "./ble/BluenetSettings";
 import { eventBus }        from "./util/EventBus";
 import { ControlHandler }  from "./ble/modules/ControlHandler";
 import { CloudHandler }    from "./ble/modules/CloudHandler";
-import {Topics} from "./topics/Topics";
-import {SetupHandler} from "./ble/modules/SetupHandler";
+import { Topics }          from "./topics/Topics";
+import { SetupHandler }    from "./ble/modules/SetupHandler";
 
 export default class Bluenet {
   ble: BleHandler;
@@ -15,10 +15,10 @@ export default class Bluenet {
 
   constructor() {
     this.settings = new BluenetSettings();
-    this.ble = new BleHandler(this.settings);
-    this.control = new ControlHandler(this.ble);
-    this.setup = new SetupHandler(this.ble);
-    this.cloud = new CloudHandler();
+    this.ble      = new BleHandler(this.settings);
+    // this.control  = new ControlHandler(this.ble);
+    // this.setup    = new SetupHandler(this.ble);
+    // this.cloud    = new CloudHandler();
   }
 
 
@@ -52,11 +52,11 @@ export default class Bluenet {
   connect(connectData, scanDuration = 5) : Promise<void> {
     return this.ble.connect(connectData, scanDuration)
       .then(() => {
-        console.log("getting Session Nonce")
+        console.log("Getting Session Nonce...")
         return this.control.getAndSetSessionNonce()
       })
       .then(() => {
-        console.log("Ready!")
+        console.log("Session Nonce Processed.")
       })
   }
 
@@ -94,8 +94,12 @@ export default class Bluenet {
   }
 
 
-  getNearestCrownstone(rssiAtLeast=-100, scanDuration=5,returnFirstAcceptable=false, addressesToExclude=[]) {
+  getNearestCrownstone(rssiAtLeast=-100, scanDuration=5, returnFirstAcceptable=false, addressesToExclude=[]) {
     return this._getNearest(false, false, rssiAtLeast, scanDuration, returnFirstAcceptable, addressesToExclude);
+  }
+
+  getNearestValidatedCrownstone(rssiAtLeast=-100, scanDuration=5,returnFirstAcceptable=false, addressesToExclude=[]) {
+    return this._getNearest(false, true, rssiAtLeast, scanDuration, returnFirstAcceptable, addressesToExclude);
   }
 
   getNearestSetupStone(rssiAtLeast=-100, scanDuration=5,returnFirstAcceptable=false, addressesToExclude=[]) {

@@ -85,6 +85,20 @@ class ControlPacketsGenerator {
         }
         return new BlePackets_1.ControlPacket(BluenetTypes_1.ControlType.LOCK_SWITCH).loadUInt8(lockByte).getPacket();
     }
+    static getSetupPacket(type, crownstoneId, adminKey, memberKey, guestKey, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
+        let prefix = Buffer.alloc(2);
+        prefix.writeUInt8(type, 0);
+        prefix.writeUInt8(crownstoneId, 1);
+        let meshBuffer = Buffer.alloc(4);
+        meshBuffer.writeUInt32LE(meshAccessAddress, 0);
+        let processedUUID = ibeaconUUID.replace(/:/g, "").replace(/-/g, "");
+        let uuidBuffer = Buffer.from(Buffer.from(processedUUID, 'hex').reverse());
+        let ibeaconBuffer = Buffer.alloc(4);
+        ibeaconBuffer.writeUInt16LE(ibeaconMajor, 0);
+        ibeaconBuffer.writeUInt16LE(ibeaconMinor, 2);
+        let data = Buffer.concat([prefix, adminKey, memberKey, guestKey, meshBuffer, uuidBuffer, ibeaconBuffer]);
+        return new BlePackets_1.ControlPacket(BluenetTypes_1.ControlType.SETUP).loadByteArray(data).getPacket();
+    }
 }
 exports.ControlPacketsGenerator = ControlPacketsGenerator;
 //# sourceMappingURL=ControlPackets.js.map

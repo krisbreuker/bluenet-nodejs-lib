@@ -5,6 +5,7 @@ export declare class ControlHandler {
     constructor(ble: any);
     getAndSetSessionNonce(): Promise<void>;
     setSwitchState(state: number): Promise<void>;
+    commandFactoryReset(): Promise<void>;
     disconnect(): Promise<void>;
     _writeControlPacket(packet: Buffer): Promise<void>;
 }

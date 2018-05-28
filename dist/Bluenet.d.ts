@@ -22,6 +22,7 @@ export default class Bluenet {
     stopScanning(): void;
     on(topic: any, callback: any): any;
     getNearestCrownstone(rssiAtLeast?: number, scanDuration?: number, returnFirstAcceptable?: boolean, addressesToExclude?: any[]): Promise<{}>;
+    getNearestValidatedCrownstone(rssiAtLeast?: number, scanDuration?: number, returnFirstAcceptable?: boolean, addressesToExclude?: any[]): Promise<{}>;
     getNearestSetupStone(rssiAtLeast?: number, scanDuration?: number, returnFirstAcceptable?: boolean, addressesToExclude?: any[]): Promise<{}>;
     _getNearest(setupMode: any, verifiedOnly: any, rssiAtLeast?: number, scanDuration?: number, returnFirstAcceptable?: boolean, addressesToExclude?: any[]): Promise<{}>;
 }

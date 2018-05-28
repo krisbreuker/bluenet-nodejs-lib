@@ -30,6 +30,9 @@ export declare const ControlType: {
     MESH_COMMAND: number;
     ALLOW_DIMMING: number;
     LOCK_SWITCH: number;
+    SETUP: number;
+    SWITCHCRAFT: number;
+    UART: number;
 };
 export declare const ConfigurationType: {
     DEVICE_NAME: number;

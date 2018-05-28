@@ -38,6 +38,11 @@ export class ControlHandler {
     return this._writeControlPacket(packet)
   }
 
+  commandFactoryReset() {
+    let packet = ControlPacketsGenerator.getCommandFactoryResetPacket()
+    return this._writeControlPacket(packet)
+  }
+
   disconnect() {
     let packet = ControlPacketsGenerator.getDisconnectPacket()
     return this._writeControlPacket(packet)

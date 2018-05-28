@@ -32,6 +32,9 @@ exports.ControlType = {
     MESH_COMMAND: 28,
     ALLOW_DIMMING: 29,
     LOCK_SWITCH: 30,
+    SETUP: 31,
+    SWITCHCRAFT: 32,
+    UART: 33,
 };
 exports.ConfigurationType = {
     DEVICE_NAME: 0,

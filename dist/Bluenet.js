@@ -3,17 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const BleHandler_1 = require("./ble/BleHandler");
 const BluenetSettings_1 = require("./ble/BluenetSettings");
 const EventBus_1 = require("./util/EventBus");
-const ControlHandler_1 = require("./ble/modules/ControlHandler");
-const CloudHandler_1 = require("./ble/modules/CloudHandler");
 const Topics_1 = require("./topics/Topics");
-const SetupHandler_1 = require("./ble/modules/SetupHandler");
 class Bluenet {
     constructor() {
         this.settings = new BluenetSettings_1.BluenetSettings();
         this.ble = new BleHandler_1.BleHandler(this.settings);
-        this.control = new ControlHandler_1.ControlHandler(this.ble);
-        this.setup = new SetupHandler_1.SetupHandler(this.ble);
-        this.cloud = new CloudHandler_1.CloudHandler();
+        // this.control  = new ControlHandler(this.ble);
+        // this.setup    = new SetupHandler(this.ble);
+        // this.cloud    = new CloudHandler();
     }
     setSettings(keys, referenceId = "BluenetNodeJSLib", encryptionEnabled = true) {
         this.settings.loadKeys(encryptionEnabled, keys.adminKey, keys.memberKey, keys.guestKey, referenceId);
@@ -42,11 +39,11 @@ class Bluenet {
     connect(connectData, scanDuration = 5) {
         return this.ble.connect(connectData, scanDuration)
             .then(() => {
-            console.log("getting Session Nonce");
+            console.log("Getting Session Nonce...");
             return this.control.getAndSetSessionNonce();
         })
             .then(() => {
-            console.log("Ready!");
+            console.log("Session Nonce Processed.");
         });
     }
     wait(seconds) {
@@ -77,6 +74,9 @@ class Bluenet {
     }
     getNearestCrownstone(rssiAtLeast = -100, scanDuration = 5, returnFirstAcceptable = false, addressesToExclude = []) {
         return this._getNearest(false, false, rssiAtLeast, scanDuration, returnFirstAcceptable, addressesToExclude);
+    }
+    getNearestValidatedCrownstone(rssiAtLeast = -100, scanDuration = 5, returnFirstAcceptable = false, addressesToExclude = []) {
+        return this._getNearest(false, true, rssiAtLeast, scanDuration, returnFirstAcceptable, addressesToExclude);
     }
     getNearestSetupStone(rssiAtLeast = -100, scanDuration = 5, returnFirstAcceptable = false, addressesToExclude = []) {
         return this._getNearest(true, true, rssiAtLeast, scanDuration, returnFirstAcceptable, addressesToExclude);

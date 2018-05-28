@@ -31,8 +31,8 @@ export class Scanner {
     });
 
     // scan events
-    noble.on('scanStart', ()                => { console.log("scanStart");        });
-    noble.on('scanStop',  ()                => { console.log("scanStop");         });
+    noble.on('scanStart', ()                => { /* console.log("scanStart"); */  });
+    noble.on('scanStop',  ()                => { /* console.log("scanStop");  */  });
     noble.on('discover',  (advertisement)   => { this.discover(advertisement);    });
     noble.on('warning',   (warning)         => { console.log("warning", warning); });
   }

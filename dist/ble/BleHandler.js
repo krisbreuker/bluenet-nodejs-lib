@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Scanner_1 = require("./Scanner");
 const EncryptionHandler_1 = require("../util/EncryptionHandler");
+const NotificationMerger_1 = require("../util/NotificationMerger");
+const BluenetTypes_1 = require("../protocol/BluenetTypes");
 class BleHandler {
     constructor(settings) {
         this.connectedPeripheral = null;
@@ -23,7 +25,7 @@ class BleHandler {
             return this._getCharacteristics(services);
         })
             .then(() => {
-            console.log("Done");
+            console.log("Connection process complete.");
         })
             .catch((err) => { console.log(err); throw err; });
     }
@@ -34,6 +36,9 @@ class BleHandler {
                 resolve(connectData);
             }
             else {
+                if (typeof connectData === 'object' && connectData.handle !== undefined) {
+                    connectData = connectData.handle;
+                }
                 // this is an UUID.
                 console.log("Trying to get Peripheral...");
                 return this.scanner.getPeripheral(connectData, scanDuration)
@@ -143,6 +148,27 @@ class BleHandler {
             }
         });
     }
+    waitForPeripheralToDisconnect(timeoutInSeconds) {
+        return new Promise((resolve, reject) => {
+            if (this.connectedPeripheral) {
+                let timeoutPassed = false;
+                let timeout = setTimeout(() => { timeoutPassed = true; reject(); }, timeoutInSeconds * 1000);
+                this.connectedPeripheral.peripheral.once("disconnect", () => {
+                    if (timeoutPassed === false) {
+                        clearTimeout(timeout);
+                        resolve();
+                    }
+                });
+            }
+            else {
+                resolve();
+            }
+        });
+    }
+    errorDisconnect() {
+        return this.disconnect()
+            .catch((err) => { });
+    }
     writeToCharacteristic(serviceId, characteristicId, data, encryptionEnabled = true) {
         return new Promise((resolve, reject) => {
             let dataToUse = data;
@@ -209,8 +235,104 @@ class BleHandler {
             resolve(characteristic);
         });
     }
-    setupSingleNotification() { }
-    setupNotificationStream() { }
+    setupSingleNotification(serviceId, characteristicId, writeCommand) {
+        return this.getCharacteristic(serviceId, characteristicId)
+            .then((characteristic) => {
+            return new Promise((resolve, reject) => {
+                let cleanUp = (err) => {
+                    // cleanup listeners
+                    characteristic.removeListener('data', collectDataCallback);
+                    if (err) {
+                        return reject(err);
+                    }
+                };
+                let mergedDataCallback = (data) => {
+                    cleanUp(null);
+                    // first we check if we have to decrypt this data.
+                    if (this.settings.encryptionEnabled) {
+                        data = EncryptionHandler_1.EncryptionHandler.decrypt(data, this.settings);
+                    }
+                    resolve(data);
+                };
+                let merger = new NotificationMerger_1.NotificationMerger(mergedDataCallback);
+                let collectDataCallback = (data, isNotification) => {
+                    if (isNotification) {
+                        merger.merge(data);
+                    }
+                };
+                characteristic.on('data', collectDataCallback);
+                characteristic.once('notify', (state) => {
+                    if (state === true) {
+                        // great!
+                        writeCommand();
+                    }
+                    else {
+                        cleanUp("Failed to subscribe to notifications");
+                    }
+                });
+                characteristic.subscribe((err) => { if (err) {
+                    return cleanUp(err);
+                } });
+            });
+        });
+    }
+    setupNotificationStream(serviceId, characteristicId, writeCommand, processHandler, timeout = 5) {
+        return this.getCharacteristic(serviceId, characteristicId)
+            .then((characteristic) => {
+            return new Promise((resolve, reject) => {
+                let fallbackTimeout = setTimeout(() => { cleanUp("Notification Stream Timeout"); }, timeout * 1000);
+                let cleanUp = (err) => {
+                    // cleanup listeners
+                    clearTimeout(fallbackTimeout);
+                    characteristic.removeListener('data', collectDataCallback);
+                    characteristic.unsubscribe();
+                    if (err) {
+                        return reject(err);
+                    }
+                };
+                let mergedDataCallback = (data) => {
+                    // first we check if we have to decrypt this data.
+                    if (this.settings.encryptionEnabled) {
+                        data = EncryptionHandler_1.EncryptionHandler.decrypt(data, this.settings);
+                    }
+                    let instruction = processHandler(data);
+                    if (instruction === BluenetTypes_1.ProcessType.ABORT_ERROR) {
+                        cleanUp("Abort");
+                    }
+                    else if (instruction === BluenetTypes_1.ProcessType.CONTINUE) {
+                        // do nothing and wait
+                    }
+                    else if (instruction === BluenetTypes_1.ProcessType.FINISHED) {
+                        cleanUp(null);
+                        return resolve();
+                    }
+                    else {
+                        cleanUp("Unknown instruction");
+                    }
+                };
+                let merger = new NotificationMerger_1.NotificationMerger(mergedDataCallback);
+                let collectDataCallback = (data, isNotification) => {
+                    console.log("Got Data", data, isNotification);
+                    if (isNotification) {
+                        merger.merge(data);
+                    }
+                };
+                characteristic.on('data', collectDataCallback);
+                characteristic.once('notify', (state) => {
+                    if (state === true) {
+                        // great!
+                        writeCommand();
+                    }
+                    else {
+                        cleanUp("Failed to subscribe to notifications");
+                    }
+                });
+                characteristic.subscribe((err) => { if (err) {
+                    return cleanUp(err);
+                } });
+            });
+        });
+    }
 }
 exports.BleHandler = BleHandler;
 //# sourceMappingURL=BleHandler.js.map

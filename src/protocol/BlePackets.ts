@@ -126,7 +126,7 @@ export class WriteConfigPacket extends ReadConfigPacket {
 
 export class ReadStatePacket extends BLEPacket {
   getOpCode() {
-    return OpCode.READ
+    return OpCode.READ;
   }
 
   getPacket() {
@@ -149,6 +149,6 @@ export class NotificationStatePacket extends ReadStatePacket {
   }
 
   getOpCode() {
-    return OpCode.NOTIFY
+    return OpCode.NOTIFY;
   }
 }
