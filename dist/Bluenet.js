@@ -3,18 +3,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const BleHandler_1 = require("./ble/BleHandler");
 const BluenetSettings_1 = require("./ble/BluenetSettings");
 const EventBus_1 = require("./util/EventBus");
+const ControlHandler_1 = require("./ble/modules/ControlHandler");
+const CloudHandler_1 = require("./ble/modules/CloudHandler");
 const Topics_1 = require("./topics/Topics");
+const SetupHandler_1 = require("./ble/modules/SetupHandler");
 class Bluenet {
     constructor() {
         this.settings = new BluenetSettings_1.BluenetSettings();
         this.ble = new BleHandler_1.BleHandler(this.settings);
-        // this.control  = new ControlHandler(this.ble);
-        // this.setup    = new SetupHandler(this.ble);
-        // this.cloud    = new CloudHandler();
+        this.control = new ControlHandler_1.ControlHandler(this.ble);
+        this.setup = new SetupHandler_1.SetupHandler(this.ble);
+        this.cloud = new CloudHandler_1.CloudHandler();
     }
+    /**
+     *
+     * @param keys
+     * @param {string} referenceId
+     * @param {boolean} encryptionEnabled
+     */
     setSettings(keys, referenceId = "BluenetNodeJSLib", encryptionEnabled = true) {
         this.settings.loadKeys(encryptionEnabled, keys.adminKey, keys.memberKey, keys.guestKey, referenceId);
     }
+    /**
+     *
+     * @returns {Promise<any>}
+     */
     isReady() {
         return this.ble.isReady();
     }
@@ -60,8 +73,13 @@ class Bluenet {
     disconnect() {
         return this.ble.disconnect();
     }
+    cleanUp() {
+        this.ble.cleanUp();
+    }
     quit() {
-        this.ble.quit();
+        this.ble.cleanUp();
+        // this is a hard quit. Your program will end here.
+        process.exit(1);
     }
     startScanning() {
         return this.ble.startScanning();
@@ -100,7 +118,7 @@ class Bluenet {
             };
             fallbackTimeout = setTimeout(() => { finalize(); }, scanDuration * 1000);
             let checkResults = (data) => {
-                if (addressesToExclude.indexOf(data.handle) !== -1) {
+                if (addressesToExclude.indexOf(data.handle) !== -1 && addressesToExclude.indexOf(data.address) !== -1) {
                     return;
                 }
                 if (data.rssi >= rssiAtLeast) {

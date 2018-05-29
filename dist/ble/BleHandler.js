@@ -4,6 +4,7 @@ const Scanner_1 = require("./Scanner");
 const EncryptionHandler_1 = require("../util/EncryptionHandler");
 const NotificationMerger_1 = require("../util/NotificationMerger");
 const BluenetTypes_1 = require("../protocol/BluenetTypes");
+const BluenetError_1 = require("../BluenetError");
 class BleHandler {
     constructor(settings) {
         this.connectedPeripheral = null;
@@ -39,6 +40,9 @@ class BleHandler {
                 if (typeof connectData === 'object' && connectData.handle !== undefined) {
                     connectData = connectData.handle;
                 }
+                else if (typeof connectData === 'object' && connectData.address !== undefined) {
+                    connectData = connectData.address;
+                }
                 // this is an UUID.
                 console.log("Trying to get Peripheral...");
                 return this.scanner.getPeripheral(connectData, scanDuration)
@@ -48,10 +52,17 @@ class BleHandler {
                 })
                     .catch((err) => {
                     console.log("Failed to get peripheral", err);
+                    reject(err);
                 });
             }
         })
             .then((peripheral) => {
+            if (this.connectedPeripheral !== null) {
+                if (peripheral.uuid === this.connectedPeripheral.peripheral.uuid) {
+                    return peripheral;
+                }
+                throw new BluenetError_1.BluenetError(BluenetError_1.BluenetErrorType.ALREADY_CONNECTED_TO_SOMETHING_ELSE, "Bluenet is already connected to another Crownstone.");
+            }
             // connecting run
             return new Promise((resolve, reject) => {
                 // if this has the connect method implemented....
@@ -68,7 +79,7 @@ class BleHandler {
                     });
                 }
                 else {
-                    reject("Invalid peripheral to connect to.");
+                    reject(new BluenetError_1.BluenetError(BluenetError_1.BluenetErrorType.INVALID_PERIPHERAL, "Invalid peripheral to connect to."));
                 }
             });
         });
@@ -204,8 +215,8 @@ class BleHandler {
     readCharacteristicWithoutEncryption(serviceId, characteristicId) {
         return this.readCharacteristic(serviceId, characteristicId, false);
     }
-    quit() {
-        this.scanner.quit();
+    cleanUp() {
+        this.scanner.cleanUp();
     }
     getService(serviceId) {
         return new Promise((resolve, reject) => {

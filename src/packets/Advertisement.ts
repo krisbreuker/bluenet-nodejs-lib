@@ -6,6 +6,7 @@ export class Advertisement {
   id = null;
   name = null;
   handle = null;
+  address = null;
   rssi = null;
   referenceId = null;
 
@@ -22,6 +23,7 @@ export class Advertisement {
   parse(rawAdvertisement) {
     this.id = rawAdvertisement.id;
     this.handle = rawAdvertisement.uuid;
+    this.address = rawAdvertisement.address;
     this.name = rawAdvertisement.name;
     this.rssi = rawAdvertisement.rssi;
 
@@ -87,6 +89,7 @@ export class Advertisement {
   getJSON() {
     let obj = {
       handle: this.handle,
+      address: this.address,
       name: this.name,
       rssi: this.rssi,
       isCrownstoneFamily: this.isCrownstoneFamily(),

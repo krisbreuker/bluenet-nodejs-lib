@@ -58,18 +58,17 @@ class Scanner {
             this.scanningInProgress = false;
         }
     }
-    quit() {
-        console.log("Quit");
+    cleanUp() {
         noble.removeAllListeners();
     }
     /**
      * Check if this uuid is in the cache. If it is not, we will scan for 3 seconds to find it!
-     * @param uuid
+     * @param identifier
      * @returns {Promise<any>}
      */
-    getPeripheral(uuid, scanDuration = 15000) {
+    getPeripheral(identifier, scanDuration = 15000) {
         return new Promise((resolve, reject) => {
-            if (this.cache[uuid] === undefined) {
+            if (this.cache[identifier] === undefined) {
                 let timeout = null;
                 console.log("Peripheral not cached. Starting scan...");
                 this.start()
@@ -77,7 +76,7 @@ class Scanner {
                     console.log("Scan started...");
                     let unsubscribe = EventBus_1.eventBus.on(Topics_1.Topics.peripheralDiscovered, (peripheral) => {
                         // found a match!
-                        if (peripheral.uuid === uuid) {
+                        if (peripheral.uuid === identifier || peripheral.address === identifier) {
                             // success! stop the timeout.
                             clearTimeout(timeout);
                             // unsub from this event
@@ -93,7 +92,7 @@ class Scanner {
                 });
             }
             else {
-                resolve(this.cache[uuid].peripheral);
+                resolve(this.cache[identifier].peripheral);
             }
         })
             .catch((err) => {
@@ -121,6 +120,7 @@ class Scanner {
         // parse the service data
         advertisement.process();
         this.cache[peripheral.uuid] = { advertisement: advertisement, peripheral: peripheral };
+        this.cache[peripheral.address] = { advertisement: advertisement, peripheral: peripheral };
         if (this.trackedStones[advertisement.id] === undefined) {
             this.trackedStones[advertisement.id] = new StoneTracker_1.StoneTracker();
         }

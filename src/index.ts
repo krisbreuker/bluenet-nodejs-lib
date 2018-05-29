@@ -1,4 +1,9 @@
 import Bluenet from "./Bluenet"
 import {Topics} from "./topics/Topics";
+import {PublicUtil} from "./util/PublicUtil";
 
-export {Bluenet, Topics}
+module.exports = {
+  Bluenet: Bluenet,
+  Topics: Topics,
+  util: PublicUtil,
+}

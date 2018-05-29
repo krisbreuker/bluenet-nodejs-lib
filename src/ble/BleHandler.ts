@@ -8,6 +8,7 @@ import {Scanner} from "./Scanner";
 import {EncryptionHandler} from "../util/EncryptionHandler";
 import {NotificationMerger} from "../util/NotificationMerger";
 import {ProcessType} from "../protocol/BluenetTypes";
+import {BluenetError, BluenetErrorType} from "../BluenetError";
 
 
 export class BleHandler {
@@ -52,6 +53,9 @@ export class BleHandler {
         if (typeof connectData === 'object' && connectData.handle !== undefined) {
           connectData = connectData.handle;
         }
+        else if (typeof connectData === 'object' && connectData.address !== undefined) {
+          connectData = connectData.address;
+        }
         // this is an UUID.
         console.log("Trying to get Peripheral...")
         return this.scanner.getPeripheral(connectData, scanDuration)
@@ -61,10 +65,17 @@ export class BleHandler {
           })
           .catch((err) => {
             console.log("Failed to get peripheral", err);
+            reject(err);
           })
       }
     })
       .then((peripheral : any) => {
+        if (this.connectedPeripheral !== null) {
+          if (peripheral.uuid === this.connectedPeripheral.peripheral.uuid){
+            return peripheral;
+          }
+          throw new BluenetError(BluenetErrorType.ALREADY_CONNECTED_TO_SOMETHING_ELSE, "Bluenet is already connected to another Crownstone.")
+        }
         // connecting run
         return new Promise((resolve, reject) => {
           // if this has the connect method implemented....
@@ -81,7 +92,7 @@ export class BleHandler {
             });
           }
           else {
-            reject("Invalid peripheral to connect to.")
+            reject(new BluenetError(BluenetErrorType.INVALID_PERIPHERAL, "Invalid peripheral to connect to."))
           }
         })
       })
@@ -231,8 +242,8 @@ export class BleHandler {
     return this.readCharacteristic(serviceId, characteristicId, false);
   }
 
-  quit() {
-    this.scanner.quit()
+  cleanUp() {
+    this.scanner.cleanUp()
   }
 
   getService(serviceId) {

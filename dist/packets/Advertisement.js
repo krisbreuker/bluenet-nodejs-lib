@@ -7,6 +7,7 @@ class Advertisement {
         this.id = null;
         this.name = null;
         this.handle = null;
+        this.address = null;
         this.rssi = null;
         this.referenceId = null;
         this.serviceDataAvailable = false;
@@ -18,6 +19,7 @@ class Advertisement {
     parse(rawAdvertisement) {
         this.id = rawAdvertisement.id;
         this.handle = rawAdvertisement.uuid;
+        this.address = rawAdvertisement.address;
         this.name = rawAdvertisement.name;
         this.rssi = rawAdvertisement.rssi;
         let serviceDataArray = rawAdvertisement.advertisement.serviceData;
@@ -74,6 +76,7 @@ class Advertisement {
     getJSON() {
         let obj = {
             handle: this.handle,
+            address: this.address,
             name: this.name,
             rssi: this.rssi,
             isCrownstoneFamily: this.isCrownstoneFamily(),

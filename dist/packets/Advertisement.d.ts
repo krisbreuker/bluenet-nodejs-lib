@@ -3,6 +3,7 @@ export declare class Advertisement {
     id: any;
     name: any;
     handle: any;
+    address: any;
     rssi: any;
     referenceId: any;
     serviceDataAvailable: boolean;
@@ -19,6 +20,7 @@ export declare class Advertisement {
     setReadyForUse(): void;
     getJSON(): {
         handle: any;
+        address: any;
         name: any;
         rssi: any;
         isCrownstoneFamily: boolean;

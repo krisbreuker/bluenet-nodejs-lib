@@ -19,6 +19,10 @@ export class SetupHandler {
 
   setup(crownstoneId, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
     return new Promise((resolve, reject) => {
+      if (!this.ble.settings.adminKey || !this.ble.settings.memberKey || !this.ble.settings.guestKey) {
+        return reject(new BluenetError(BluenetErrorType.NO_ENCRYPTION_KEYS, "No encryption keys available. These are required to setup a Crownstone. Use either linkCloud or setSettings to load keys into Bluenet."))
+      }
+
       if (this.ble.connectedPeripheral.characteristics[CSServices.SetupService][SetupCharacteristics.SetupControl]) {
         resolve(this._performFastSetup(crownstoneId, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor));
       }
@@ -31,7 +35,6 @@ export class SetupHandler {
   _performFastSetup(crownstoneId, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
     let processHandler = (returnData) => {
       let packet = new ResultPacket(returnData);
-      console.log("packet", packet.valid, packet.getUInt16Payload())
       if (packet.valid) {
         let payload = packet.getUInt16Payload()
         if (payload == ResultValue.WAIT_FOR_SUCCESS) {

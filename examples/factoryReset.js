@@ -18,7 +18,8 @@ bluenet.getNearestValidatedCrownstone(-80, 10, true)
       })
       .then(() => {
         console.log("Done.")
+        setTimeout(() => { bluenet.quit(); }, 500);
       })
   })
-  .catch((err) => { console.log("commandFactoryReset", err) })
+  .catch((err) => { console.log("Something went wrong in the factory reset example.", err) })
 

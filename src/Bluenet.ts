@@ -16,16 +16,26 @@ export default class Bluenet {
   constructor() {
     this.settings = new BluenetSettings();
     this.ble      = new BleHandler(this.settings);
-    // this.control  = new ControlHandler(this.ble);
-    // this.setup    = new SetupHandler(this.ble);
-    // this.cloud    = new CloudHandler();
+    this.control  = new ControlHandler(this.ble);
+    this.setup    = new SetupHandler(this.ble);
+    this.cloud    = new CloudHandler();
   }
 
-
+  /**
+   *
+   * @param keys
+   * @param {string} referenceId
+   * @param {boolean} encryptionEnabled
+   */
   setSettings(keys, referenceId="BluenetNodeJSLib", encryptionEnabled=true) {
     this.settings.loadKeys(encryptionEnabled, keys.adminKey, keys.memberKey, keys.guestKey, referenceId)
   }
 
+
+  /**
+   *
+   * @returns {Promise<any>}
+   */
   isReady() {
     return this.ble.isReady();
   }
@@ -77,8 +87,15 @@ export default class Bluenet {
     return this.ble.disconnect()
   }
 
+  cleanUp() {
+    this.ble.cleanUp()
+  }
+
   quit() {
-    this.ble.quit()
+    this.ble.cleanUp()
+
+    // this is a hard quit. Your program will end here.
+    process.exit(1);
   }
 
   startScanning() {
@@ -130,7 +147,7 @@ export default class Bluenet {
       fallbackTimeout = setTimeout(() => { finalize()}, scanDuration * 1000);
 
       let checkResults = (data) => {
-        if (addressesToExclude.indexOf(data.handle) !== -1) {
+        if (addressesToExclude.indexOf(data.handle) !== -1 && addressesToExclude.indexOf(data.address) !== -1) {
           return;
         }
         if (data.rssi >= rssiAtLeast) {
