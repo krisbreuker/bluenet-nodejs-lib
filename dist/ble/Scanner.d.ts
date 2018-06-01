@@ -1,4 +1,4 @@
-import { BluenetSettings } from "./BluenetSettings";
+import { BluenetSettings } from "../BluenetSettings";
 import { TrackerMap, Cache } from "../types/declarations";
 export declare class Scanner {
     nobleState: string;

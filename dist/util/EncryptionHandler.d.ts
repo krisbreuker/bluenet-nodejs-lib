@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { BluenetSettings } from "../ble/BluenetSettings";
+import { BluenetSettings } from "../BluenetSettings";
 export declare class EncryptionHandler {
     static decryptSessionNonce(rawNonce: Buffer, key: Buffer): Buffer;
     static encrypt(data: Buffer, settings: BluenetSettings): Buffer;

@@ -1,7 +1,7 @@
 import { BleHandler } from "./ble/BleHandler";
-import { BluenetSettings } from "./ble/BluenetSettings";
+import { BluenetSettings } from "./BluenetSettings";
 import { ControlHandler } from "./ble/modules/ControlHandler";
-import { CloudHandler } from "./ble/modules/CloudHandler";
+import { CloudHandler } from "./cloud/CloudHandler";
 import { SetupHandler } from "./ble/modules/SetupHandler";
 export default class Bluenet {
     ble: BleHandler;
@@ -22,7 +22,7 @@ export default class Bluenet {
      * @returns {Promise<any>}
      */
     isReady(): Promise<{}>;
-    linkCloud(userData: any): Promise<{}> | Promise<void>;
+    linkCloud(userData: any): Promise<void> | Promise<{}>;
     connect(connectData: any, scanDuration?: number): Promise<void>;
     wait(seconds: any): Promise<{}>;
     setupCrownstone(handle: any, crownstoneId: any, meshAccessAddress: any, ibeaconUUID: any, ibeaconMajor: any, ibeaconMinor: any): Promise<{}>;

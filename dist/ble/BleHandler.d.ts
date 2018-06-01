@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { BluenetSettings } from "./BluenetSettings";
+import { BluenetSettings } from "../BluenetSettings";
 import { Scanner } from "./Scanner";
 export declare class BleHandler {
     scanner: Scanner;

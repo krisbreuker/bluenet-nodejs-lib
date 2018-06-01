@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const BluenetSettings_1 = require("../ble/BluenetSettings");
+const BluenetSettings_1 = require("../BluenetSettings");
 const BluenetError_1 = require("../BluenetError");
 var crypto = require('crypto');
 const aesjs = require('aes-js');

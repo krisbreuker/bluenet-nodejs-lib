@@ -55,20 +55,20 @@ class StoneTracker {
                 if (this.uniqueIdentifier != serviceData.uniqueIdentifier) {
                     if (serviceData.validation != 0 && serviceData.opCode == 5) {
                         if (serviceData.dataType != 1) {
-                            if (serviceData.validation == 0xFA) { // datatype 1 is the error packet
+                            if (serviceData.validation == 0xFA) {
                                 this.addValidMeasurement(serviceData);
                             }
-                            else if (serviceData.validation != 0xFA) { // datatype 1 is the error packet
+                            else if (serviceData.validation != 0xFA) {
                                 this.invalidateDevice(serviceData);
                             }
                         }
                     }
                     else if (serviceData.validation != 0 && serviceData.opCode == 3) {
                         if (serviceData.dataType != 1) {
-                            if (serviceData.validation == 0xFA) { // datatype 1 is the error packet
+                            if (serviceData.validation == 0xFA) {
                                 this.addValidMeasurement(serviceData);
                             }
-                            else if (serviceData.validation != 0xFA) { // datatype 1 is the error packet
+                            else if (serviceData.validation != 0xFA) {
                                 this.invalidateDevice(serviceData);
                             }
                         }
