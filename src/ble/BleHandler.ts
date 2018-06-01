@@ -3,7 +3,7 @@ import {
   CROWNSTONE_BUILTIN_ADVERTISEMENT_SERVICE_UUID,
   CROWNSTONE_GUIDESTONE_ADVERTISEMENT_SERVICE_UUID
 } from "../protocol/Services";
-import {BluenetSettings} from "./BluenetSettings";
+import {BluenetSettings} from "../BluenetSettings";
 import {Scanner} from "./Scanner";
 import {EncryptionHandler} from "../util/EncryptionHandler";
 import {NotificationMerger} from "../util/NotificationMerger";

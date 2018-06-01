@@ -2,7 +2,7 @@
 // __tests__/Intro-test.js
 // Note: test renderer must be required after react-native.
 import {EncryptionHandler} from "../src/util/EncryptionHandler";
-import {BluenetSettings} from "../src/ble/BluenetSettings";
+import {BluenetSettings} from "../src/BluenetSettings";
 import 'jest';
 
 // let jest = require('jest');

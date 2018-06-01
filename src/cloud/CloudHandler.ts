@@ -1,5 +1,5 @@
 import {BluenetSettings} from "../BluenetSettings";
-import {CLOUD} from "../../cloud/cloudAPI";
+import {CLOUD} from "./cloudAPI";
 const sha1 = require('sha-1');
 
 export class CloudHandler {

@@ -1,6 +1,6 @@
 {
   "name": "bluenet-nodejs-lib",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": {
     "start": "tsc -watch",
     "test": "jest --useStderr --clearMocks",

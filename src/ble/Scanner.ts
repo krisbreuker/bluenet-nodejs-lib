@@ -2,7 +2,7 @@ import { StoneTracker }      from "./StoneTracker";
 import { Topics }            from "../topics/Topics";
 import { eventBus }          from "../util/EventBus";
 import { Advertisement }     from "../packets/Advertisement";
-import { BluenetSettings }   from "./BluenetSettings";
+import { BluenetSettings }   from "../BluenetSettings";
 import { TrackerMap, Cache } from "../types/declarations";
 import {
   CROWNSTONE_BUILTIN_ADVERTISEMENT_SERVICE_UUID,

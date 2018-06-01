@@ -1,8 +1,8 @@
 import { BleHandler }      from "./ble/BleHandler";
-import { BluenetSettings } from "./ble/BluenetSettings";
+import { BluenetSettings } from "./BluenetSettings";
 import { eventBus }        from "./util/EventBus";
 import { ControlHandler }  from "./ble/modules/ControlHandler";
-import { CloudHandler }    from "./ble/modules/CloudHandler";
+import { CloudHandler }    from "./cloud/CloudHandler";
 import { Topics }          from "./topics/Topics";
 import { SetupHandler }    from "./ble/modules/SetupHandler";
 

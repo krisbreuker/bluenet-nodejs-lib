@@ -1,6 +1,6 @@
 import {DeviceType} from "../protocol/BluenetTypes";
 import {parseOpCode3, parseOpCode4, parseOpCode5, parseOpCode6} from "./Parsers";
-import {BluenetSettings} from "../ble/BluenetSettings";
+import {BluenetSettings} from "../BluenetSettings";
 import {CrownstoneErrors} from "./CrownstoneErrors";
 import {EncryptionHandler} from "../util/EncryptionHandler";
 let aesjs = require('aes-js');

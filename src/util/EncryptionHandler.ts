@@ -1,4 +1,4 @@
-import {BluenetSettings, UserLevel} from "../ble/BluenetSettings";
+import {BluenetSettings, UserLevel} from "../BluenetSettings";
 import {Session} from "inspector";
 import {BluenetError, BluenetErrorType} from "../BluenetError";
 var crypto = require('crypto')
