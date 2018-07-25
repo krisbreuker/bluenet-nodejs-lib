@@ -4,7 +4,6 @@ import {
   CROWNSTONE_GUIDESTONE_ADVERTISEMENT_SERVICE_UUID
 } from "../protocol/Services";
 import {BluenetSettings} from "../BluenetSettings";
-import {Scanner} from "./Scanner";
 import {EncryptionHandler} from "../util/EncryptionHandler";
 import {NotificationMerger} from "../util/NotificationMerger";
 import {ProcessType} from "../protocol/BluenetTypes";
@@ -12,14 +11,12 @@ import {BluenetError, BluenetErrorType} from "../BluenetError";
 
 
 export class BleHandler {
-  scanner : Scanner;
   settings : BluenetSettings;
 
   connectedPeripheral = null;
 
   constructor(settings) {
     this.settings = settings;
-    this.scanner = new Scanner(settings);
   }
 
 
@@ -27,8 +24,8 @@ export class BleHandler {
    * Connect is either a handle or a peripheral object
    * @param connectData
    */
-  connect(connectData, scanDuration) {
-    return this._connect(connectData, scanDuration)
+  connect(connectData) {
+    return this._connect(connectData)
       .then((peripheral) => {
         console.log("Getting Services...")
         return this._getServices(peripheral);
@@ -43,59 +40,32 @@ export class BleHandler {
       .catch((err) => { console.log(err); throw err;})
   }
 
-  _connect(connectData, scanDuration) {
+  _connect(peripheral) {
+    if (this.connectedPeripheral !== null) {
+      if (peripheral.uuid === this.connectedPeripheral.peripheral.uuid){
+        return peripheral;
+      }
+      throw new BluenetError(BluenetErrorType.ALREADY_CONNECTED_TO_SOMETHING_ELSE, "Bluenet is already connected to another Crownstone.")
+    }
+    // connecting run
     return new Promise((resolve, reject) => {
-      if (typeof connectData === 'object' && connectData.connect !== undefined) {
-        // connect to this.
-        resolve(connectData);
-      }
-      else {
-        if (typeof connectData === 'object' && connectData.handle !== undefined) {
-          connectData = connectData.handle;
-        }
-        else if (typeof connectData === 'object' && connectData.address !== undefined) {
-          connectData = connectData.address;
-        }
-        // this is an UUID.
-        console.log("Trying to get Peripheral...")
-        return this.scanner.getPeripheral(connectData, scanDuration)
-          .then((peripheral) => {
-            console.log("Peripheral obtained...")
-            resolve(peripheral)
-          })
-          .catch((err) => {
-            console.log("Failed to get peripheral", err);
+      // if this has the connect method implemented....
+      if (peripheral.connect) {
+        peripheral.connect((err, homeyPeripheral) => {
+          if (err) {
             reject(err);
-          })
-      }
-    })
-      .then((peripheral : any) => {
-        if (this.connectedPeripheral !== null) {
-          if (peripheral.uuid === this.connectedPeripheral.peripheral.uuid){
-            return peripheral;
-          }
-          throw new BluenetError(BluenetErrorType.ALREADY_CONNECTED_TO_SOMETHING_ELSE, "Bluenet is already connected to another Crownstone.")
-        }
-        // connecting run
-        return new Promise((resolve, reject) => {
-          // if this has the connect method implemented....
-          if (peripheral.connect) {
-            peripheral.connect((err) => {
-              if (err) {
-                reject(err);
-              }
-              else {
-                console.log("Connected successfully!")
-                this._setConnectedPeriphral(peripheral)
-                resolve(peripheral);
-              }
-            });
           }
           else {
-            reject(new BluenetError(BluenetErrorType.INVALID_PERIPHERAL, "Invalid peripheral to connect to."))
+            console.log("Connected successfully!")
+            this._setConnectedPeriphral(homeyPeripheral)
+            resolve(homeyPeripheral);
           }
-        })
-      })
+        });
+      }
+      else {
+        reject(new BluenetError(BluenetErrorType.INVALID_PERIPHERAL, "Invalid peripheral to connect to."))
+      }
+    })
   }
 
   _getServices(peripheral) {
@@ -152,18 +122,6 @@ export class BleHandler {
     this.connectedPeripheral = {peripheral: peripheral, services: {}, characteristics: {}};
   }
 
-  startScanning() {
-    return this.scanner.start();
-  }
-
-  stopScanning() {
-    this.scanner.stop();
-  }
-
-  isReady() {
-    return this.scanner.isReady();
-  }
-
   disconnect() {
     return new Promise((resolve, reject) => {
       if (this.connectedPeripheral) {
@@ -212,10 +170,7 @@ export class BleHandler {
 
       this.getCharacteristic(serviceId, characteristicId)
         .then((characteristic) => {
-          characteristic.write(
-            dataToUse,
-            false,
-            (err) => {
+          characteristic.write( dataToUse, (err) => {
               if (err) { return reject(err); }
               resolve();
             }
@@ -240,10 +195,6 @@ export class BleHandler {
 
   readCharacteristicWithoutEncryption(serviceId, characteristicId) {
     return this.readCharacteristic(serviceId, characteristicId, false);
-  }
-
-  cleanUp() {
-    this.scanner.cleanUp()
   }
 
   getService(serviceId) {

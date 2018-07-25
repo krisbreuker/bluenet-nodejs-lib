@@ -17,23 +17,10 @@ export default class Bluenet {
      * @param {boolean} encryptionEnabled
      */
     setSettings(keys: any, referenceId?: string, encryptionEnabled?: boolean): void;
-    /**
-     *
-     * @returns {Promise<any>}
-     */
-    isReady(): Promise<{}>;
-    linkCloud(userData: any): Promise<void> | Promise<{}>;
-    connect(connectData: any, scanDuration?: number): Promise<void>;
+    linkCloud(userData: any): Promise<{}> | Promise<void>;
+    connect(connectData: any): Promise<void>;
     wait(seconds: any): Promise<{}>;
     setupCrownstone(handle: any, crownstoneId: any, meshAccessAddress: any, ibeaconUUID: any, ibeaconMajor: any, ibeaconMinor: any): Promise<{}>;
     disconnect(): Promise<{}>;
-    cleanUp(): void;
-    quit(): void;
-    startScanning(): Promise<void>;
-    stopScanning(): void;
     on(topic: any, callback: any): any;
-    getNearestCrownstone(rssiAtLeast?: number, scanDuration?: number, returnFirstAcceptable?: boolean, addressesToExclude?: any[]): Promise<{}>;
-    getNearestValidatedCrownstone(rssiAtLeast?: number, scanDuration?: number, returnFirstAcceptable?: boolean, addressesToExclude?: any[]): Promise<{}>;
-    getNearestSetupStone(rssiAtLeast?: number, scanDuration?: number, returnFirstAcceptable?: boolean, addressesToExclude?: any[]): Promise<{}>;
-    _getNearest(setupMode: any, verifiedOnly: any, rssiAtLeast?: number, scanDuration?: number, returnFirstAcceptable?: boolean, addressesToExclude?: any[]): Promise<{}>;
 }
