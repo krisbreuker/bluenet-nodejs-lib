@@ -3,17 +3,19 @@ import { BluenetSettings } from "../BluenetSettings";
 export declare class BleHandler {
     settings: BluenetSettings;
     connectedPeripheral: any;
+    connectionSessionId: any;
+    connectionPending: boolean;
     constructor(settings: any);
     /**
      * Connect is either a handle or a peripheral object
      * @param connectData
      */
-    connect(connectData: any): any;
-    _connect(peripheral: any): any;
+    connect(connectData: any): Promise<void>;
+    _connect(peripheral: any): Promise<{}>;
     _getServices(peripheral: any): Promise<{}>;
     _getCharacteristics(services: any): Promise<{}>;
     _getCharacteristicsFromService(service: any): Promise<{}>;
-    _setConnectedPeriphral(peripheral: any): void;
+    _setConnectedPeripheral(peripheral: any): void;
     disconnect(): Promise<{}>;
     waitForPeripheralToDisconnect(timeoutInSeconds: any): Promise<{}>;
     errorDisconnect(): Promise<void | {}>;
