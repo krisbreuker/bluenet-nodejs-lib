@@ -9,6 +9,7 @@ import {EncryptionHandler} from "../util/EncryptionHandler";
 import {NotificationMerger} from "../util/NotificationMerger";
 import {ProcessType} from "../protocol/BluenetTypes";
 import {BluenetError, BluenetErrorType} from "../BluenetError";
+import {Util} from "../util/Util";
 
 
 export class BleHandler {
@@ -16,6 +17,8 @@ export class BleHandler {
   settings : BluenetSettings;
 
   connectedPeripheral = null;
+  connectionSessionId = null;
+  connectionPending = false;
 
   constructor(settings) {
     this.settings = settings;
@@ -80,14 +83,17 @@ export class BleHandler {
         return new Promise((resolve, reject) => {
           // if this has the connect method implemented....
           if (peripheral.connect) {
-            peripheral.connect((err) => {
+            this.connectionPending = true;
+            peripheral.connect((err, connectedPeripheral) => {
               if (err) {
+                this.connectionPending = false;
                 reject(err);
               }
               else {
                 console.log("Connected successfully!")
-                this._setConnectedPeriphral(peripheral)
-                resolve(peripheral);
+                this.connectionPending = false;
+                this._setConnectedPeripheral(connectedPeripheral)
+                resolve(connectedPeripheral);
               }
             });
           }
@@ -143,12 +149,12 @@ export class BleHandler {
     })
   }
 
-  _setConnectedPeriphral(peripheral) {
+  _setConnectedPeripheral(peripheral) {
     peripheral.once("disconnect", () => {
       console.log("Disconnected from Device, cleaning up...");
       this.connectedPeripheral = null;
     })
-
+    this.connectionSessionId = Util.getUUID();
     this.connectedPeripheral = {peripheral: peripheral, services: {}, characteristics: {}};
   }
 
@@ -165,15 +171,23 @@ export class BleHandler {
   }
 
   disconnect() {
+    console.log("BleHandler: starting disconnect.....")
     return new Promise((resolve, reject) => {
-      if (this.connectedPeripheral) {
+      if (this.connectedPeripheral !== null) {
+        console.log("BleHandler: Disconnecting from peripheral.....");
         this.connectedPeripheral.peripheral.disconnect((err) => {
-          if (err) { return reject(err); }
-
+          if (err) {
+            console.log("BleHandler: Disconnecting Failed...");
+            return reject(err);
+          }
+          console.log("BleHandler: Disconnected successfully.");
+          this.connectionPending = false;
+          this.connectedPeripheral = null;
           resolve();
         })
       }
       else {
+        console.log("BleHandler: Not connected in the first place. Success!");
         resolve();
       }
     })

@@ -16,16 +16,16 @@ export default class Bluenet {
      * @param {string} referenceId
      * @param {boolean} encryptionEnabled
      */
-    setSettings(keys: any, referenceId?: string, encryptionEnabled?: boolean): void;
+    setSettings(keys: keyMap, referenceId?: string, encryptionEnabled?: boolean): void;
     /**
      *
      * @returns {Promise<any>}
      */
     isReady(): Promise<{}>;
-    linkCloud(userData: any): Promise<void> | Promise<{}>;
+    linkCloud(userData: any): Promise<{}> | Promise<void>;
     connect(connectData: any, scanDuration?: number): Promise<void>;
     wait(seconds: any): Promise<{}>;
-    setupCrownstone(handle: any, crownstoneId: any, meshAccessAddress: any, ibeaconUUID: any, ibeaconMajor: any, ibeaconMinor: any): Promise<{}>;
+    setupCrownstone(handle: any, sphereUid: any, crownstoneId: any, meshAccessAddress: any, meshDeviceKey: any, ibeaconUUID: any, ibeaconMajor: any, ibeaconMinor: any): Promise<{}>;
     disconnect(): Promise<{}>;
     cleanUp(): void;
     quit(): void;

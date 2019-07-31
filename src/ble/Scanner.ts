@@ -106,7 +106,7 @@ export class Scanner {
 
                 // unsub from this event
                 unsubscribe();
-                
+
                 // here it is!
                 noble.once('scanStop',  () => { setTimeout(() => { resolve(peripheral); },500);});
 
@@ -143,7 +143,7 @@ export class Scanner {
 
     // decrypt the advertisement
     if (this.settings.encryptionEnabled) {
-      advertisement.decrypt(this.settings.guestKey);
+      advertisement.decrypt(this.settings.basicKey);
     }
     else {
       advertisement.setReadyForUse();

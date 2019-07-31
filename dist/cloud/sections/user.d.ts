@@ -6,5 +6,5 @@ export declare const user: {
     updateUserData: (data: any, background?: boolean) => any;
     requestVerificationEmail: (options?: any) => any;
     requestPasswordResetEmail: (options?: any) => any;
-    getKeys: (background?: boolean) => any;
+    getKeys: (cloudSphereId?: any, cloudStoneId?: any, background?: boolean) => any;
 };

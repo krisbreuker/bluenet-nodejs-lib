@@ -5,6 +5,8 @@ export declare class BleHandler {
     scanner: Scanner;
     settings: BluenetSettings;
     connectedPeripheral: any;
+    connectionSessionId: any;
+    connectionPending: boolean;
     constructor(settings: any);
     /**
      * Connect is either a handle or a peripheral object
@@ -15,7 +17,7 @@ export declare class BleHandler {
     _getServices(peripheral: any): Promise<{}>;
     _getCharacteristics(services: any): Promise<{}>;
     _getCharacteristicsFromService(service: any): Promise<{}>;
-    _setConnectedPeriphral(peripheral: any): void;
+    _setConnectedPeripheral(peripheral: any): void;
     startScanning(): Promise<void>;
     stopScanning(): void;
     isReady(): Promise<{}>;

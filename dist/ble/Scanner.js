@@ -112,7 +112,7 @@ class Scanner {
         }
         // decrypt the advertisement
         if (this.settings.encryptionEnabled) {
-            advertisement.decrypt(this.settings.guestKey);
+            advertisement.decrypt(this.settings.basicKey);
         }
         else {
             advertisement.setReadyForUse();
