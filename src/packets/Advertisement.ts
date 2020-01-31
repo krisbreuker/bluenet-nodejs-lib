@@ -95,7 +95,7 @@ export class Advertisement {
       isCrownstoneFamily: this.isCrownstoneFamily(),
       isInDFUMode: this.isInDFUMode(),
       referenceId: this.referenceId
-    }
+    };
 
     if (this.serviceUUID !== null) {
       obj["serviceUUID"] = this.serviceUUID!

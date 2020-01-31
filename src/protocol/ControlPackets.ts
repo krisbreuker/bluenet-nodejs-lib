@@ -1,4 +1,4 @@
-import { ControlPacket, FactoryResetPacket, keepAliveStatePacket } from './BlePackets'
+import { ControlPacket, FactoryResetPacket } from './BlePackets'
 import {ControlType} from './BluenetTypes';
 import {Util} from "../util/Util";
 
@@ -10,21 +10,12 @@ export class ControlPacketsGenerator {
     return buffer
   }
 
-  static getSetSchedulePacket(data) {
-    return new ControlPacket(ControlType.SCHEDULE_ENTRY).loadByteArray(data).getPacket()
-  }
-
-
-  static getScheduleRemovePacket(timerIndex) {
-    return new ControlPacket(ControlType.SCHEDULE_REMOVE).loadUInt8(timerIndex).getPacket()
-  }
-
   static getCommandFactoryResetPacket() {
     return new FactoryResetPacket().getPacket()
   }
 
   static getSwitchStatePacket(switchState) {
-    let convertedSwitchState = Util.bound0_100(switchState)
+    let convertedSwitchState = Util.bound0_100(switchState);
     return new ControlPacket(ControlType.SWITCH).loadUInt8(convertedSwitchState).getPacket()
   }
 
@@ -53,25 +44,11 @@ export class ControlPacketsGenerator {
    * @returns {Buffer}
    */
   static getPwmSwitchPacket(switchState) {
-    let convertedSwitchState = Util.bound0_100(switchState)
+    let convertedSwitchState = Util.bound0_100(switchState);
 
     return new ControlPacket(ControlType.PWM).loadUInt8(convertedSwitchState).getPacket()
   }
 
-  static getKeepAliveStatePacket(changeState, switchState, timeout) {
-    let convertedSwitchState = Util.bound0_100(switchState)
-
-    let actionState = 0
-    if (changeState) {
-      actionState = 1
-    }
-
-    return new keepAliveStatePacket(actionState, convertedSwitchState, timeout).getPacket()
-  }
-
-  static getKeepAliveRepeatPacket() {
-    return new ControlPacket(ControlType.KEEP_ALIVE_REPEAT).getPacket()
-  }
 
   static getResetErrorPacket(errorMask) {
     return new ControlPacket(ControlType.RESET_ERRORS).loadUInt32(errorMask).getPacket()
@@ -90,7 +67,7 @@ export class ControlPacketsGenerator {
   }
 
   static getAllowDimmingPacket(allow) {
-    let allowByte = 0
+    let allowByte = 0;
     if (allow) {
       allowByte = 1
     }
@@ -99,7 +76,7 @@ export class ControlPacketsGenerator {
   }
 
   static getLockSwitchPacket(lock) {
-    let lockByte = 0
+    let lockByte = 0;
     if (lock) {
       lockByte = 1
     }
@@ -107,7 +84,7 @@ export class ControlPacketsGenerator {
   }
 
   static getSetupPacket(type, crownstoneId, adminKey : Buffer, memberKey : Buffer, guestKey : Buffer, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
-    let prefix = Buffer.alloc(2)
+    let prefix = Buffer.alloc(2);
     prefix.writeUInt8(type,         0);
     prefix.writeUInt8(crownstoneId, 1);
 
@@ -115,13 +92,13 @@ export class ControlPacketsGenerator {
     let meshBuffer = Buffer.alloc(4);
     meshBuffer.writeUInt32LE(meshAccessAddress,0);
 
-    let processedUUID = ibeaconUUID.replace(/:/g,"").replace(/-/g,"")
-    let uuidBuffer = Buffer.from(Buffer.from(processedUUID, 'hex').reverse())
+    let processedUUID = ibeaconUUID.replace(/:/g,"").replace(/-/g,"");
+    let uuidBuffer = Buffer.from(Buffer.from(processedUUID, 'hex').reverse());
     let ibeaconBuffer = Buffer.alloc(4);
     ibeaconBuffer.writeUInt16LE(ibeaconMajor, 0);
     ibeaconBuffer.writeUInt16LE(ibeaconMinor, 2);
 
-    let data = Buffer.concat([prefix, adminKey, memberKey, guestKey, meshBuffer, uuidBuffer, ibeaconBuffer])
+    let data = Buffer.concat([prefix, adminKey, memberKey, guestKey, meshBuffer, uuidBuffer, ibeaconBuffer]);
 
     return new ControlPacket(ControlType.SETUP).loadByteArray(data).getPacket()
   }
@@ -141,17 +118,17 @@ export class ControlPacketsGenerator {
     ibeaconMajor,
     ibeaconMinor
   ) {
-    let prefix = Buffer.alloc(2)
+    let prefix = Buffer.alloc(2);
     prefix.writeUInt8(crownstoneId, 0);
     prefix.writeUInt8(sphereUid,    1);
 
-    let processedUUID = ibeaconUUID.replace(/:/g,"").replace(/-/g,"")
-    let uuidBuffer = Buffer.from(Buffer.from(processedUUID, 'hex').reverse())
+    let processedUUID = ibeaconUUID.replace(/:/g,"").replace(/-/g,"");
+    let uuidBuffer = Buffer.from(Buffer.from(processedUUID, 'hex').reverse());
     let ibeaconBuffer = Buffer.alloc(4);
     ibeaconBuffer.writeUInt16LE(ibeaconMajor, 0);
     ibeaconBuffer.writeUInt16LE(ibeaconMinor, 2);
 
-    let data = Buffer.concat([prefix, adminKey, memberKey, basicKey, serviceDataKey, localizationKey, meshDeviceKey, meshAppKey, meshNetworkKey, uuidBuffer, ibeaconBuffer])
+    let data = Buffer.concat([prefix, adminKey, memberKey, basicKey, serviceDataKey, localizationKey, meshDeviceKey, meshAppKey, meshNetworkKey, uuidBuffer, ibeaconBuffer]);
 
     return new ControlPacket(ControlType.SETUP).loadByteArray(data).getPacket()
   }

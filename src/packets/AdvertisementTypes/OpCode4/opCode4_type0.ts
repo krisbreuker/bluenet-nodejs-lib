@@ -23,19 +23,19 @@ export function parseOpCode4_type0(serviceData : ServiceData, data : Buffer) {
       serviceData.powerFactor = -0.01
     }
 
-    serviceData.powerUsageReal     = realPower / 8
-    serviceData.powerUsageApparent = serviceData.powerUsageReal / serviceData.powerFactor
+    serviceData.powerUsageReal     = realPower / 8;
+    serviceData.powerUsageApparent = serviceData.powerUsageReal / serviceData.powerFactor;
 
-    serviceData.errorsBitmask = data.readUInt32LE(8)
+    serviceData.errorsBitmask = data.readUInt32LE(8);
 
     // bitmask states
-    let bitmaskArray = Util.getBitMaskUInt8(serviceData.flagsBitmask)
-    serviceData.dimmingAvailable   = bitmaskArray[0]
-    serviceData.dimmingAllowed     = bitmaskArray[1]
-    serviceData.hasError           = bitmaskArray[2]
-    serviceData.switchLocked       = bitmaskArray[3]
-    serviceData.timeIsSet          = bitmaskArray[4]
-    serviceData.switchCraftEnabled = bitmaskArray[5]
+    let bitmaskArray = Util.getBitMaskUInt8(serviceData.flagsBitmask);
+    serviceData.dimmerReady   = bitmaskArray[0];
+    serviceData.dimmingAllowed     = bitmaskArray[1];
+    serviceData.hasError           = bitmaskArray[2];
+    serviceData.switchLocked       = bitmaskArray[3];
+    serviceData.timeIsSet          = bitmaskArray[4];
+    serviceData.switchCraftEnabled = bitmaskArray[5];
 
     serviceData.uniqueIdentifier = data.readUInt8(12);
   }

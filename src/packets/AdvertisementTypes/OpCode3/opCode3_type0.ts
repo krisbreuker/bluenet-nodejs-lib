@@ -7,27 +7,29 @@ export function parseOpCode3_type0(serviceData : ServiceData, data : Buffer) {
     // opCode   = data[0]
     // dataType = data[1]
 
-    serviceData.stateOfExternalCrownstone = false
+    serviceData.stateOfExternalCrownstone = false;
 
     serviceData.crownstoneId = data.readUInt8(2);
     serviceData.switchState  = data.readUInt8(3);
     serviceData.flagsBitmask = data.readUInt8(4);
     // bitmask states
-    let bitmaskArray = Util.getBitMaskUInt8(serviceData.flagsBitmask)
+    let bitmaskArray = Util.getBitMaskUInt8(serviceData.flagsBitmask);
 
-    serviceData.dimmingAvailable = bitmaskArray[0]
-    serviceData.dimmingAllowed   = bitmaskArray[1]
-    serviceData.hasError         = bitmaskArray[2]
-    serviceData.switchLocked     = bitmaskArray[3]
-    serviceData.timeIsSet        = bitmaskArray[4]
-    serviceData.switchCraftEnabled = bitmaskArray[5]
+    serviceData.dimmerReady      = bitmaskArray[0];
+    serviceData.dimmingAllowed   = bitmaskArray[1];
+    serviceData.hasError         = bitmaskArray[2];
+    serviceData.switchLocked     = bitmaskArray[3];
+    serviceData.timeIsSet        = bitmaskArray[4];
+    serviceData.switchCraftEnabled = bitmaskArray[5];
+    serviceData.tapToToggleEnabled  = bitmaskArray[6];
+    serviceData.behaviourOverridden = bitmaskArray[7];
 
     serviceData.temperature  = data.readUInt8(5);
 
     let powerFactor = data.readInt8(6);
     let realPower   = data.readInt16LE(7);
 
-    serviceData.powerFactor = powerFactor / 127
+    serviceData.powerFactor = powerFactor / 127;
 
     // we cannot have a 0 for a powerfactor. To avoid division by 0, we set it to be either 0.01 or -0.01
     if (serviceData.powerFactor >= 0 && serviceData.powerFactor < 0.01) {
@@ -37,8 +39,8 @@ export function parseOpCode3_type0(serviceData : ServiceData, data : Buffer) {
       serviceData.powerFactor = -0.01
     }
 
-    serviceData.powerUsageReal     = realPower / 8
-    serviceData.powerUsageApparent = serviceData.powerUsageReal / serviceData.powerFactor
+    serviceData.powerUsageReal     = realPower / 8;
+    serviceData.powerUsageApparent = serviceData.powerUsageReal / serviceData.powerFactor;
 
     serviceData.accumulatedEnergy  = data.readInt32LE(9);
 

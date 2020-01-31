@@ -6,7 +6,7 @@ export function parseOpCode3_type1(serviceData : ServiceData, data : Buffer) {
   if (data.length == 17) {
     // opCode   = data[0]
     // dataType = data[1]
-    serviceData.errorMode = true
+    serviceData.errorMode = true;
 
     serviceData.crownstoneId = data.readUInt8(2);
     serviceData.errorsBitmask = data.readUInt32LE(3);
@@ -15,14 +15,14 @@ export function parseOpCode3_type1(serviceData : ServiceData, data : Buffer) {
 
     serviceData.flagsBitmask = data.readUInt8(11);
     // bitmask states
-    let bitmaskArray = Util.getBitMaskUInt8(serviceData.flagsBitmask)
+    let bitmaskArray = Util.getBitMaskUInt8(serviceData.flagsBitmask);
 
-    serviceData.dimmingAvailable = bitmaskArray[0]
-    serviceData.dimmingAllowed = bitmaskArray[1]
-    serviceData.hasError = bitmaskArray[2]
-    serviceData.switchLocked = bitmaskArray[3]
-    serviceData.timeIsSet = bitmaskArray[4]
-    serviceData.switchCraftEnabled = bitmaskArray[5]
+    serviceData.dimmerReady = bitmaskArray[0];
+    serviceData.dimmingAllowed = bitmaskArray[1];
+    serviceData.hasError = bitmaskArray[2];
+    serviceData.switchLocked = bitmaskArray[3];
+    serviceData.timeIsSet = bitmaskArray[4];
+    serviceData.switchCraftEnabled = bitmaskArray[5];
 
     serviceData.temperature = data.readUInt8(12);
 
@@ -38,7 +38,7 @@ export function parseOpCode3_type1(serviceData : ServiceData, data : Buffer) {
     }
 
     let realPower = data.readInt16LE(15);
-    serviceData.powerUsageReal = realPower / 8
+    serviceData.powerUsageReal = realPower / 8;
 
     // this packets has no validation
     serviceData.validation = 0

@@ -20,7 +20,7 @@ exports.Util = {
         return exports.Util.boundToUnity(value) * 100;
     },
     getBitMaskUInt8: function (value) {
-        var result = Array(8).fill(false);
+        const result = Array(8).fill(false);
         let one = 1;
         result[0] = (value & one) != 0;
         result[1] = (value & (one << 1)) != 0;
@@ -33,7 +33,7 @@ exports.Util = {
         return result;
     },
     getBitMaskUInt32: function (value) {
-        var result = Array(32).fill(false);
+        const result = Array(32).fill(false);
         let one = 1;
         for (let i = 0; i < 32; i++) {
             result[i] = (value & (one << i)) != 0;

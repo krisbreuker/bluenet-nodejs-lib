@@ -15,16 +15,16 @@ export function parseOpCode3( serviceData : ServiceData, data : Buffer ) {
 
   switch(serviceData.dataType) {
     case 0:
-      parseOpCode3_type0(serviceData, data)
+      parseOpCode3_type0(serviceData, data);
       break;
     case 1:
-      parseOpCode3_type1(serviceData, data)
+      parseOpCode3_type1(serviceData, data);
       break;
     case 2:
-      parseOpCode3_type2(serviceData, data)
+      parseOpCode3_type2(serviceData, data);
       break;
     case 3:
-      parseOpCode3_type3(serviceData, data)
+      parseOpCode3_type3(serviceData, data);
       break;
     default:
       parseOpCode3_type0(serviceData, data)
@@ -41,7 +41,7 @@ export function parseOpCode4( serviceData : ServiceData, data : Buffer ) {
 
   switch(serviceData.dataType) {
     case 0:
-      parseOpCode4_type0(serviceData, data)
+      parseOpCode4_type0(serviceData, data);
       break;
     default:
       parseOpCode4_type0(serviceData, data)
@@ -53,7 +53,7 @@ export function parseOpCode4( serviceData : ServiceData, data : Buffer ) {
 export function parseOpCode5( serviceData : ServiceData, data : Buffer ) {
   if (data.length !== 18) { return; }
 
-  let deviceType = data.readUInt8(1)
+  let deviceType = data.readUInt8(1);
   serviceData.deviceType = DeviceType.getLabel(deviceType);
 
   serviceData.dataType = data.readUInt8(2);
@@ -62,17 +62,17 @@ export function parseOpCode5( serviceData : ServiceData, data : Buffer ) {
 
   switch(serviceData.dataType) {
     case 0:
-      parseOpCode3_type0(serviceData, slice)
+      parseOpCode3_type0(serviceData, slice);
       break;
     case 1:
-      parseOpCode3_type1(serviceData, slice)
+      parseOpCode3_type1(serviceData, slice);
       break;
     case 2:
-      parseOpCode3_type2(serviceData, slice)
+      parseOpCode3_type2(serviceData, slice);
       serviceData.rssiOfExternalCrownstone = slice.readUInt8(15);
       break;
     case 3:
-      parseOpCode3_type3(serviceData, data)
+      parseOpCode3_type3(serviceData, data);
       serviceData.rssiOfExternalCrownstone = slice.readUInt8(15);
       break;
     default:
@@ -84,7 +84,7 @@ export function parseOpCode5( serviceData : ServiceData, data : Buffer ) {
 export function parseOpCode6( serviceData : ServiceData, data : Buffer ) {
   if (data.length !== 18) { return; }
 
-  let deviceType = data.readUInt8(1)
+  let deviceType = data.readUInt8(1);
   serviceData.deviceType = DeviceType.getLabel(deviceType);
   serviceData.setupMode = true;
 
@@ -94,7 +94,7 @@ export function parseOpCode6( serviceData : ServiceData, data : Buffer ) {
 
   switch(serviceData.dataType) {
     case 0:
-      parseOpCode4_type0(serviceData, slice)
+      parseOpCode4_type0(serviceData, slice);
       break;
     default:
       parseOpCode4_type0(serviceData, slice)

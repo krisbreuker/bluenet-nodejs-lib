@@ -89,7 +89,7 @@ class ServiceData {
             powerUsageApparent: this.powerUsageApparent,
             accumulatedEnergy: this.accumulatedEnergy,
             timestamp: this.timestamp,
-            dimmingAvailable: this.dimmingAvailable,
+            dimmerReady: this.dimmerReady,
             dimmingAllowed: this.dimmingAllowed,
             switchLocked: this.switchLocked,
             switchCraftEnabled: this.switchCraftEnabled,

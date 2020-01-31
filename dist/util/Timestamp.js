@@ -29,7 +29,7 @@ function reconstructTimestamp(currentTimestampInSeconds, LsbTimestamp) {
     let minutesFromGMT = new Date(currentTimestampInSeconds * 1000).getTimezoneOffset();
     let correctedTimestamp = currentTimestampInSeconds + minutesFromGMT * 60;
     // attempt restoration
-    var restoredTimestamp = _obtainTimestamp(correctedTimestamp, LsbTimestamp);
+    let restoredTimestamp = _obtainTimestamp(correctedTimestamp, LsbTimestamp);
     let halfUInt16 = 0x7FFF; // roughly 9 hours in seconds
     // correct for overflows, check for drift from current time
     let delta = correctedTimestamp - restoredTimestamp;

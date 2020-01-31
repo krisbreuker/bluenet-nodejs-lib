@@ -1,20 +1,20 @@
 import {BluenetSettings, UserLevel} from "../BluenetSettings";
-import {Session} from "inspector";
 import {BluenetError, BluenetErrorType} from "../BluenetError";
-var crypto = require('crypto')
+
+const crypto = require('crypto');
 const aesjs = require('aes-js');
 
 
 
-let BLOCK_LENGTH             = 16
-let NONCE_LENGTH             = 16
-let SESSION_DATA_LENGTH      = 5
-let SESSION_KEY_LENGTH       = 4
-let PACKET_USER_LEVEL_LENGTH = 1
-let PACKET_NONCE_LENGTH      = 3
-let CHECKSUM                 = 0xcafebabe
+let BLOCK_LENGTH             = 16;
+let NONCE_LENGTH             = 16;
+let SESSION_DATA_LENGTH      = 5;
+let SESSION_KEY_LENGTH       = 4;
+let PACKET_USER_LEVEL_LENGTH = 1;
+let PACKET_NONCE_LENGTH      = 3;
+let CHECKSUM                 = 0xcafebabe;
 
-let BLUENET_ENCRYPTION_TESTING = false
+let BLUENET_ENCRYPTION_TESTING = false;
 
 
 class AESCounter {
@@ -41,8 +41,8 @@ export class EncryptionHandler {
     if (key.length      !== 16) { throw new BluenetError(BluenetErrorType.INPUT_ERROR, "Invalid Key"); }
     if (rawNonce.length !== 16) { throw new BluenetError(BluenetErrorType.INPUT_ERROR, "Invalid Payload for sessionNonce decrypting!"); }
 
-    var aesEcb = new aesjs.ModeOfOperation.ecb(key);
-    var decrypted = Buffer.from(aesEcb.decrypt(rawNonce));
+    const aesEcb = new aesjs.ModeOfOperation.ecb(key);
+    const decrypted = Buffer.from(aesEcb.decrypt(rawNonce));
 
     // start validation
     if (0xcafebabe === decrypted.readUInt32LE(0)) {
@@ -65,24 +65,24 @@ export class EncryptionHandler {
     }
 
     // unpack the session data
-    let sessionData = new SessionData(settings.sessionNonce)
+    let sessionData = new SessionData(settings.sessionNonce);
 
     // create Nonce array
     let nonce = Buffer.alloc(PACKET_NONCE_LENGTH);
-    EncryptionHandler.fillWithRandomNumbers(nonce)
+    EncryptionHandler.fillWithRandomNumbers(nonce);
 
     let IV = EncryptionHandler.generateIV(nonce, sessionData.sessionNonce);
     let counterBuffer = Buffer.alloc(BLOCK_LENGTH);
     IV.copy(counterBuffer,0,0);
 
     // get key
-    let key = EncryptionHandler._getKey(settings.userLevel, settings)
+    let key = EncryptionHandler._getKey(settings.userLevel, settings);
 
     // get the packet size. This must fit the data and the session key and be an integer amount of blocks
     let packetSize = (data.length + SESSION_KEY_LENGTH) + BLOCK_LENGTH - (data.length + SESSION_KEY_LENGTH) % BLOCK_LENGTH;
 
-    let paddedPayload = Buffer.alloc(packetSize)
-    sessionData.validationKey.copy(paddedPayload,0,0,SESSION_KEY_LENGTH)
+    let paddedPayload = Buffer.alloc(packetSize);
+    sessionData.validationKey.copy(paddedPayload,0,0,SESSION_KEY_LENGTH);
 
     // put the input data in the padded payload
     data.copy(paddedPayload,SESSION_KEY_LENGTH, 0);
@@ -93,7 +93,7 @@ export class EncryptionHandler {
     let encryptedBuffer = Buffer.from(encryptedBytes);
 
     // assemble the result package
-    let result = Buffer.alloc(encryptedBytes.length + PACKET_NONCE_LENGTH + PACKET_USER_LEVEL_LENGTH)
+    let result = Buffer.alloc(encryptedBytes.length + PACKET_NONCE_LENGTH + PACKET_USER_LEVEL_LENGTH);
     nonce.copy(result, 0,0, PACKET_NONCE_LENGTH);
     result.writeUInt8(settings.userLevel, PACKET_NONCE_LENGTH);
     encryptedBuffer.copy(result, PACKET_NONCE_LENGTH + PACKET_USER_LEVEL_LENGTH,0);
@@ -107,12 +107,12 @@ export class EncryptionHandler {
     }
 
     // unpack the session data
-    let sessionData = new SessionData(settings.sessionNonce)
+    let sessionData = new SessionData(settings.sessionNonce);
 
     // decrypt data
-    let decrypted = EncryptionHandler._decrypt(data, sessionData, settings)
+    let decrypted = EncryptionHandler._decrypt(data, sessionData, settings);
     // verify decryption success and strip checksum
-    let result = EncryptionHandler._verifyDecryption(decrypted, sessionData)
+    let result = EncryptionHandler._verifyDecryption(decrypted, sessionData);
 
     return result;
   }
@@ -120,9 +120,9 @@ export class EncryptionHandler {
   static _decrypt(data : Buffer, sessionData: SessionData, settings: BluenetSettings) {
     let encryptedPackage = new EncryptedPackage(data);
 
-    let key = EncryptionHandler._getKey(encryptedPackage.userLevel, settings)
+    let key = EncryptionHandler._getKey(encryptedPackage.userLevel, settings);
 
-    let IV = EncryptionHandler.generateIV(encryptedPackage.nonce, sessionData.sessionNonce)
+    let IV = EncryptionHandler.generateIV(encryptedPackage.nonce, sessionData.sessionNonce);
 
     let counterBuffer = Buffer.alloc(BLOCK_LENGTH);
     IV.copy(counterBuffer,0,0);
@@ -137,8 +137,8 @@ export class EncryptionHandler {
   static _verifyDecryption(decrypted : Buffer, sessionData: SessionData) {
     if (decrypted.readUInt32LE(0) === sessionData.validationKey.readUInt32LE(0)) {
       // remove checksum from decyption and return payload
-      let result = Buffer.alloc(decrypted.length - SESSION_KEY_LENGTH)
-      decrypted.copy(result,0, SESSION_KEY_LENGTH)
+      let result = Buffer.alloc(decrypted.length - SESSION_KEY_LENGTH);
+      decrypted.copy(result,0, SESSION_KEY_LENGTH);
       return result
     }
     else {
@@ -165,10 +165,10 @@ export class EncryptionHandler {
     let IV = Buffer.alloc(NONCE_LENGTH);
 
     // the IV used in the CTR mode is 8 bytes, the first 3 are random
-    packetNonce.copy(IV,0,0)
+    packetNonce.copy(IV,0,0);
 
     // the IV used in the CTR mode is 8 bytes, the last 5 are from the session data
-    sessionData.copy(IV,PACKET_NONCE_LENGTH,0)
+    sessionData.copy(IV,PACKET_NONCE_LENGTH,0);
 
     return IV
   }
@@ -220,8 +220,8 @@ export class EncryptionHandler {
 
 
 export class SessionData {
-  sessionNonce  = null
-  validationKey = null
+  sessionNonce  = null;
+  validationKey = null;
 
   constructor(sessionData) {
     if (sessionData.length != SESSION_DATA_LENGTH) {
@@ -236,12 +236,12 @@ export class SessionData {
 
 
 export class EncryptedPackage {
-  nonce     : Buffer = null
-  userLevel : number = null
-  payload   : Buffer = null
+  nonce     : Buffer = null;
+  userLevel : number = null;
+  payload   : Buffer = null;
 
   constructor(data : Buffer) {
-    let prefixLength = PACKET_NONCE_LENGTH + PACKET_USER_LEVEL_LENGTH
+    let prefixLength = PACKET_NONCE_LENGTH + PACKET_USER_LEVEL_LENGTH;
     if (data.length < prefixLength) {
       throw 'BleError.INVALID_PACKAGE_FOR_ENCRYPTION_TOO_SHORT'
     }
@@ -259,7 +259,7 @@ export class EncryptedPackage {
       throw 'BleError.INVALID_KEY_FOR_ENCRYPTION'
     }
 
-    let payloadData = Buffer.alloc(data.length - prefixLength)
+    let payloadData = Buffer.alloc(data.length - prefixLength);
     data.copy(payloadData, 0, prefixLength, data.length);
 
     if (payloadData.length % 16 != 0) {

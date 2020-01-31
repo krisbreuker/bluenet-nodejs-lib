@@ -24,7 +24,7 @@ export const PublicUtil = {
     }
   },
 
-}
+};
 
 
 function validateAccessAddress(address) {

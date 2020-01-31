@@ -4,17 +4,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Wrapper for all relevant data of the object
  *
  */
+const DataStepper_1 = require("../util/DataStepper");
+const BluenetTypes_1 = require("../protocol/BluenetTypes");
 class ResultPacket {
     constructor(data) {
         this.valid = false;
-        if (data.length >= 4) {
+        this.load(data);
+    }
+    load(data) {
+        let minSize = 6;
+        if (data.length >= minSize) {
             this.valid = true;
-            this.type = data.readUInt8(0);
-            this.opCode = data.readUInt8(1);
-            this.length = data.readUInt16LE(2);
-            let totalSize = 4 + this.length;
+            let stepper = new DataStepper_1.DataStepper(data);
+            this.commandType = stepper.getUInt16();
+            this.resultCode = stepper.getUInt16();
+            if (BluenetTypes_1.ControlType[this.commandType] === undefined || BluenetTypes_1.ResultValue[this.resultCode] === undefined) {
+                this.valid = false;
+                return;
+            }
+            this.size = stepper.getUInt16();
+            let totalSize = minSize + this.size;
             if (data.length >= totalSize) {
-                this.payload = data.slice(4);
+                this.payload = stepper.getBuffer(this.size);
             }
             else {
                 this.valid = false;
@@ -22,17 +33,6 @@ class ResultPacket {
         }
         else {
             this.valid = false;
-        }
-    }
-    getUInt16Payload() {
-        if (this.valid == false) {
-            return 65535;
-        }
-        if (this.length >= 2) {
-            return this.payload.readUInt16LE(0);
-        }
-        else {
-            return 65535;
         }
     }
 }

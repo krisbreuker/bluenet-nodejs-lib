@@ -1,6 +1,4 @@
-import {DeviceType} from "../protocol/BluenetTypes";
 import {parseOpCode3, parseOpCode4, parseOpCode5, parseOpCode6} from "./Parsers";
-import {BluenetSettings} from "../BluenetSettings";
 import {CrownstoneErrors} from "./CrownstoneErrors";
 import {EncryptionHandler} from "../util/EncryptionHandler";
 let aesjs = require('aes-js');
@@ -23,7 +21,7 @@ export class ServiceData {
   encryptedData : Buffer;
   encryptedDataStartIndex : number;
 
-  dimmingAvailable;
+  dimmerReady;
   dimmingAllowed;
   hasError;
   switchLocked;
@@ -38,25 +36,27 @@ export class ServiceData {
   errorMode;
   timeIsSet;
   switchCraftEnabled;
+  tapToToggleEnabled;
+  behaviourOverridden;
 
   uniqueIdentifier;
 
   deviceType = 'undefined';
-  rssiOfExternalCrownstone = 0
+  rssiOfExternalCrownstone = 0;
 
-  validData = false
-  dataReadyForUse = false // decryption is successful
+  validData = false;
+  dataReadyForUse = false; // decryption is successful
 
 
   constructor(data : Buffer) {
     this.data = data;
     this.validData = true;
     if (data.length === 18) {
-      this.encryptedData = data.slice(2)
+      this.encryptedData = data.slice(2);
       this.encryptedDataStartIndex = 2
     }
     else if (data.length === 17) {
-      this.encryptedData = data.slice(1)
+      this.encryptedData = data.slice(1);
       this.encryptedDataStartIndex = 1;
     }
     else {
@@ -67,21 +67,21 @@ export class ServiceData {
   parse() {
     this.validData = true;
     if (this.data.length === 18) {
-      this.opCode = this.data.readUInt8(0)
+      this.opCode = this.data.readUInt8(0);
       switch (this.opCode) {
         case 5:
         case 7:
           parseOpCode5(this, this.data);
           break;
         case 6:
-          parseOpCode6(this, this.data)
+          parseOpCode6(this, this.data);
           break;
         default:
           parseOpCode5(this, this.data)
       }
     }
     else if (this.data.length === 17) {
-      this.opCode = this.data[0]
+      this.opCode = this.data[0];
       switch (this.opCode) {
         case 3:
           parseOpCode3(this, this.data);
@@ -103,7 +103,7 @@ export class ServiceData {
   }
 
   getJSON() {
-    let errorsDictionary = new CrownstoneErrors(this.errorsBitmask).getJSON()
+    let errorsDictionary = new CrownstoneErrors(this.errorsBitmask).getJSON();
     let obj = {
       opCode                    : this.opCode,
       dataType                  : this.dataType,
@@ -120,8 +120,8 @@ export class ServiceData {
       powerUsageApparent        : this.powerUsageApparent,
       accumulatedEnergy         : this.accumulatedEnergy,
       timestamp                 : this.timestamp,
-      
-      dimmingAvailable          : this.dimmingAvailable,
+
+      dimmerReady               : this.dimmerReady,
       dimmingAllowed            : this.dimmingAllowed,
       switchLocked              : this.switchLocked,
       switchCraftEnabled        : this.switchCraftEnabled,
@@ -133,7 +133,7 @@ export class ServiceData {
       timeIsSet                 : this.timeIsSet,
       deviceType                : this.deviceType,
       rssiOfExternalCrownstone  : this.rssiOfExternalCrownstone
-    }
+    };
 
     return obj;
   }
@@ -148,7 +148,7 @@ export class ServiceData {
 
   decrypt(key) {
     if (this.validData && this.encryptedData.length === 16) {
-      let decrypted = EncryptionHandler.decryptAdvertisement(this.encryptedData, key)
+      let decrypted = EncryptionHandler.decryptAdvertisement(this.encryptedData, key);
 
       // copy decrypted data back in to data buffer.
       decrypted.copy(this.data, this.encryptedDataStartIndex);

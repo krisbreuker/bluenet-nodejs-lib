@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const BleHandler_1 = require("./ble/BleHandler");
+const BleHandler_1 = require("./core/ble/BleHandler");
 const BluenetSettings_1 = require("./BluenetSettings");
 const EventBus_1 = require("./util/EventBus");
-const ControlHandler_1 = require("./ble/modules/ControlHandler");
+const ControlHandler_1 = require("./core/ble/modules/ControlHandler");
 const CloudHandler_1 = require("./cloud/CloudHandler");
 const Topics_1 = require("./topics/Topics");
-const SetupHandler_1 = require("./ble/modules/SetupHandler");
+const SetupHandler_1 = require("./core/ble/modules/SetupHandler");
 class Bluenet {
     constructor() {
         this.settings = new BluenetSettings_1.BluenetSettings();

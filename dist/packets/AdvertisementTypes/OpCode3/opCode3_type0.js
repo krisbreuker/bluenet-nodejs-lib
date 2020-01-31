@@ -12,12 +12,14 @@ function parseOpCode3_type0(serviceData, data) {
         serviceData.flagsBitmask = data.readUInt8(4);
         // bitmask states
         let bitmaskArray = Util_1.Util.getBitMaskUInt8(serviceData.flagsBitmask);
-        serviceData.dimmingAvailable = bitmaskArray[0];
+        serviceData.dimmerReady = bitmaskArray[0];
         serviceData.dimmingAllowed = bitmaskArray[1];
         serviceData.hasError = bitmaskArray[2];
         serviceData.switchLocked = bitmaskArray[3];
         serviceData.timeIsSet = bitmaskArray[4];
         serviceData.switchCraftEnabled = bitmaskArray[5];
+        serviceData.tapToToggleEnabled = bitmaskArray[6];
+        serviceData.behaviourOverridden = bitmaskArray[7];
         serviceData.temperature = data.readUInt8(5);
         let powerFactor = data.readInt8(6);
         let realPower = data.readInt16LE(7);

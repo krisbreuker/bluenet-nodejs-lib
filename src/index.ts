@@ -6,4 +6,4 @@ module.exports = {
   Bluenet: Bluenet,
   Topics: Topics,
   util: PublicUtil,
-}
+};

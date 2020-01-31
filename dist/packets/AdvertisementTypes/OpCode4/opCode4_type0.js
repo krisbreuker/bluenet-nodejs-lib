@@ -23,7 +23,7 @@ function parseOpCode4_type0(serviceData, data) {
         serviceData.errorsBitmask = data.readUInt32LE(8);
         // bitmask states
         let bitmaskArray = Util_1.Util.getBitMaskUInt8(serviceData.flagsBitmask);
-        serviceData.dimmingAvailable = bitmaskArray[0];
+        serviceData.dimmerReady = bitmaskArray[0];
         serviceData.dimmingAllowed = bitmaskArray[1];
         serviceData.hasError = bitmaskArray[2];
         serviceData.switchLocked = bitmaskArray[3];

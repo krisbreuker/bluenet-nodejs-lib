@@ -4,7 +4,7 @@ export const UserLevel = {
   basic: 2,
   setup: 100,
   unknown: 255,
-}
+};
 
 
 export class BluenetSettings {
@@ -70,7 +70,7 @@ export class BluenetSettings {
       this.userLevel = UserLevel.basic;
     }
     else {
-      this.userLevel = UserLevel.unknown
+      this.userLevel = UserLevel.unknown;
       this.initializedKeys = false
     }
   }
@@ -84,12 +84,12 @@ export class BluenetSettings {
   }
 
   loadSetupKey(setupKey) {
-    this.setupKey = setupKey
+    this.setupKey = setupKey;
     this.userLevel = UserLevel.setup
   }
 
   exitSetup() {
-    this.setupKey = null
+    this.setupKey = null;
     this.determineUserLevel()
   }
 

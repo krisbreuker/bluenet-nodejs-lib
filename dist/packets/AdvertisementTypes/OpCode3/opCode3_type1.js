@@ -13,7 +13,7 @@ function parseOpCode3_type1(serviceData, data) {
         serviceData.flagsBitmask = data.readUInt8(11);
         // bitmask states
         let bitmaskArray = Util_1.Util.getBitMaskUInt8(serviceData.flagsBitmask);
-        serviceData.dimmingAvailable = bitmaskArray[0];
+        serviceData.dimmerReady = bitmaskArray[0];
         serviceData.dimmingAllowed = bitmaskArray[1];
         serviceData.hasError = bitmaskArray[2];
         serviceData.switchLocked = bitmaskArray[3];

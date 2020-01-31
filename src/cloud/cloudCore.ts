@@ -1,4 +1,4 @@
-import {LOG, LOGi} from "../util/logging/Log";
+import {LOG} from "../util/logging/Log";
 
 import { prepareEndpointAndBody } from './cloudUtil'
 import { defaultHeaders } from './sections/cloudApiBase'
@@ -6,7 +6,7 @@ import {Util} from "../util/Util";
 
 import fetch from 'node-fetch';
 
-const CLOUD_ADDRESS = 'https://my.crownstone.rocks/api/'
+const CLOUD_ADDRESS = 'https://my.crownstone.rocks/api/';
 const NETWORK_REQUEST_TIMEOUT = 15000;
 
 /**

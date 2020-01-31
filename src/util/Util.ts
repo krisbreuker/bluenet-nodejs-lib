@@ -30,22 +30,22 @@ export const Util = {
   },
 
   getBitMaskUInt8: function(value) {
-    var result = Array(8).fill(false);
-    let one = 1
-    result[0] = (value & one) != 0
-    result[1] = (value & (one << 1)) != 0
-    result[2] = (value & (one << 2)) != 0
-    result[3] = (value & (one << 3)) != 0
-    result[4] = (value & (one << 4)) != 0
-    result[5] = (value & (one << 5)) != 0
-    result[6] = (value & (one << 6)) != 0
-    result[7] = (value & (one << 7)) != 0
+    const result = Array(8).fill(false);
+    let one = 1;
+    result[0] = (value & one) != 0;
+    result[1] = (value & (one << 1)) != 0;
+    result[2] = (value & (one << 2)) != 0;
+    result[3] = (value & (one << 3)) != 0;
+    result[4] = (value & (one << 4)) != 0;
+    result[5] = (value & (one << 5)) != 0;
+    result[6] = (value & (one << 6)) != 0;
+    result[7] = (value & (one << 7)) != 0;
     return result
   },
 
   getBitMaskUInt32: function(value) {
-      var result = Array(32).fill(false);
-      let one = 1;
+    const result = Array(32).fill(false);
+    let one = 1;
 
       for (let i = 0; i < 32; i++) {
         result[i] = (value & (one << i)) != 0;
@@ -55,8 +55,8 @@ export const Util = {
   },
 
   UInt32FromBitmask : function(bitMask) {
-    let result = 0
-    let one = 1
+    let result = 0;
+    let one = 1;
 
     for (let i = 0; i < 32; i++) {
       if (bitMask[i]) {

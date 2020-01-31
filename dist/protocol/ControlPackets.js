@@ -9,12 +9,6 @@ class ControlPacketsGenerator {
         buffer.writeUInt32LE(0xdeadbeef, 0);
         return buffer;
     }
-    static getSetSchedulePacket(data) {
-        return new BlePackets_1.ControlPacket(BluenetTypes_1.ControlType.SCHEDULE_ENTRY).loadByteArray(data).getPacket();
-    }
-    static getScheduleRemovePacket(timerIndex) {
-        return new BlePackets_1.ControlPacket(BluenetTypes_1.ControlType.SCHEDULE_REMOVE).loadUInt8(timerIndex).getPacket();
-    }
     static getCommandFactoryResetPacket() {
         return new BlePackets_1.FactoryResetPacket().getPacket();
     }
@@ -45,17 +39,6 @@ class ControlPacketsGenerator {
     static getPwmSwitchPacket(switchState) {
         let convertedSwitchState = Util_1.Util.bound0_100(switchState);
         return new BlePackets_1.ControlPacket(BluenetTypes_1.ControlType.PWM).loadUInt8(convertedSwitchState).getPacket();
-    }
-    static getKeepAliveStatePacket(changeState, switchState, timeout) {
-        let convertedSwitchState = Util_1.Util.bound0_100(switchState);
-        let actionState = 0;
-        if (changeState) {
-            actionState = 1;
-        }
-        return new BlePackets_1.keepAliveStatePacket(actionState, convertedSwitchState, timeout).getPacket();
-    }
-    static getKeepAliveRepeatPacket() {
-        return new BlePackets_1.ControlPacket(BluenetTypes_1.ControlType.KEEP_ALIVE_REPEAT).getPacket();
     }
     static getResetErrorPacket(errorMask) {
         return new BlePackets_1.ControlPacket(BluenetTypes_1.ControlType.RESET_ERRORS).loadUInt32(errorMask).getPacket();

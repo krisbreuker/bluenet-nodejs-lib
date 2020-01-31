@@ -1,8 +1,8 @@
 
 
 class StoneKeepAlivePacket {
-  crownstoneId = 0
-  actionAndState = 0
+  crownstoneId = 0;
+  actionAndState = 0;
 
   /**
    crownstoneId: byte
@@ -35,14 +35,14 @@ class MeshKeepAlivePacket {
   packets = [];
 
   contructor(packetType, timeout, packets : [StoneKeepAlivePacket]) {
-    this.type = packetType.value
-    this.timeout = timeout
-    this.packets = packets
+    this.type = packetType.value;
+    this.timeout = timeout;
+    this.packets = packets;
     this.reserved = [0, 0]
   }
 
   getPacket() {
-    let packet = Buffer.alloc(4)
+    let packet = Buffer.alloc(4);
     packet.writeUInt8(this.type,0);
     packet.writeUInt16BE(this.timeout,1);
     packet.writeUInt8(this.packets.length,3);
@@ -56,9 +56,9 @@ class MeshKeepAlivePacket {
 }
 
 class MeshCommandPacket {
-  type = 0
-  bitmask = 0
-  crownstoneIds = []
+  type = 0;
+  bitmask = 0;
+  crownstoneIds = [];
   payload : Buffer;
 
   contructor(packetType, crownstoneIds : [number], payload : Buffer) {
@@ -73,7 +73,7 @@ class MeshCommandPacket {
       idBuffer.writeUInt8(this.crownstoneIds[i],i);
     }
 
-    let packet = Buffer.alloc(4)
+    let packet = Buffer.alloc(4);
     packet.writeUInt8(this.type,0);
     packet.writeUInt8(this.bitmask,1);
     packet.writeUInt8(this.crownstoneIds.length,2);
@@ -85,10 +85,10 @@ class MeshCommandPacket {
 }
 
 class StoneMultiSwitchPacket {
-  timeout = 0
-  crownstoneId = 0
-  state = 0
-  intent = 0
+  timeout = 0;
+  crownstoneId = 0;
+  state = 0;
+  intent = 0;
 
   /**
    * crownstoneId:
@@ -97,14 +97,14 @@ class StoneMultiSwitchPacket {
    * intent: intentType
    **/
   contructor(crownstoneId : number, state : number, timeout: number, intent) {
-    this.crownstoneId = crownstoneId
+    this.crownstoneId = crownstoneId;
     this.state = Math.min(1, Math.max(0, state)) * 100; // map to [0 .. 100]
-    this.timeout = timeout
+    this.timeout = timeout;
     this.intent = intent
   }
 
   getPacket() {
-    let packet = Buffer.alloc(5)
+    let packet = Buffer.alloc(5);
     packet.writeUInt8(this.crownstoneId,0);
     packet.writeUInt8(this.state,1);
     packet.writeUInt16BE(this.timeout,2);
@@ -116,16 +116,16 @@ class StoneMultiSwitchPacket {
 
 
 class MeshMultiSwitchPacket {
-  type = 0
-  packets = []
+  type = 0;
+  packets = [];
 
   contructor(packetType, packets : [StoneMultiSwitchPacket]) {
-    this.type = packetType
+    this.type = packetType;
     this.packets = packets
   }
 
   getPacket() {
-    let packet = Buffer.alloc(2)
+    let packet = Buffer.alloc(2);
     packet.writeUInt8(this.type,0);
     packet.writeUInt8(this.packets.length,1);
 

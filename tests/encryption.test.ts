@@ -8,7 +8,7 @@ import 'jest';
 // let jest = require('jest');
 
 let settings = new BluenetSettings()
-settings.loadKeys(true, 'AdminKeyOf16Byte', 'MemberKeyOf16Byt', 'GuestKeyOf16Byte','test');
+// settings.loadKeys(true, 'AdminKeyOf16Byte', 'MemberKeyOf16Byt', 'GuestKeyOf16Byte','test');
 
 
 test('CTR Encryption', () => {

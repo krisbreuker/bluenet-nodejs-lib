@@ -1,4 +1,4 @@
-import {StoneTracker} from "../ble/StoneTracker";
+import {StoneTracker} from "../core/ble/StoneTracker";
 import {Advertisement} from "../packets/Advertisement";
 
 type PromiseCallback = (any) => Promise<any>

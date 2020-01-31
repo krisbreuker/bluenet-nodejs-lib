@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const BluenetSettings_1 = require("../BluenetSettings");
 const BluenetError_1 = require("../BluenetError");
-var crypto = require('crypto');
+const crypto = require('crypto');
 const aesjs = require('aes-js');
 let BLOCK_LENGTH = 16;
 let NONCE_LENGTH = 16;
@@ -31,8 +31,8 @@ class EncryptionHandler {
         if (rawNonce.length !== 16) {
             throw new BluenetError_1.BluenetError(BluenetError_1.BluenetErrorType.INPUT_ERROR, "Invalid Payload for sessionNonce decrypting!");
         }
-        var aesEcb = new aesjs.ModeOfOperation.ecb(key);
-        var decrypted = Buffer.from(aesEcb.decrypt(rawNonce));
+        const aesEcb = new aesjs.ModeOfOperation.ecb(key);
+        const decrypted = Buffer.from(aesEcb.decrypt(rawNonce));
         // start validation
         if (0xcafebabe === decrypted.readUInt32LE(0)) {
             return decrypted.slice(4, 4 + SESSION_DATA_LENGTH);

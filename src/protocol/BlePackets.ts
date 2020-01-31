@@ -1,10 +1,10 @@
-import {ControlType, OpCode} from "./BluenetTypes";
+import {ControlType} from "./BluenetTypes";
 
 
 export class BLEPacket {
-  type = 0
-  length = 0
-  payloadBuffer : any = null
+  type = 0;
+  length = 0;
+  payloadBuffer : any = null;
 
   constructor(packetType : number) {
     this.type = packetType
@@ -22,7 +22,7 @@ export class BLEPacket {
   }
 
   loadString(string) {
-    this.payloadBuffer = Buffer.from(string, 'ascii')
+    this.payloadBuffer = Buffer.from(string, 'ascii');
     return this._process()
   }
 
@@ -51,33 +51,32 @@ export class BLEPacket {
   }
 
   loadByteArray(byteArray) {
-    this.payloadBuffer = Buffer.from(byteArray)
+    this.payloadBuffer = Buffer.from(byteArray);
     return this._process()
   }
 
   loadBuffer(buffer) {
-    this.payloadBuffer = buffer
+    this.payloadBuffer = buffer;
     return this._process()
   }
 
   _process() {
-    this.length = this.payloadBuffer.length
+    this.length = this.payloadBuffer.length;
     return this;
   }
 
-  getPacket(reserved = 0) : Buffer {
-    let packetLength = 1 + 1 + 2;
+  getPacket() : Buffer {
+    let packetLength = 4;
     let buffer = Buffer.alloc(packetLength);
 
-    buffer.writeUInt8(this.type, 0);
-    buffer.writeUInt8(reserved, 1); // reserved
+    buffer.writeUInt16LE(this.type, 0);
     buffer.writeUInt16LE(this.length, 2); // length
 
     if (this.length > 0 && this.payloadBuffer) {
       buffer = Buffer.concat([buffer, this.payloadBuffer])
     }
 
-    return buffer
+    return buffer;
   }
 }
 
@@ -85,70 +84,41 @@ export class BLEPacket {
 export class ControlPacket extends BLEPacket {}
 
 
-export class keepAliveStatePacket extends ControlPacket {
-  constructor(action, state, timeout) {
-    let keepAliveBuffer = Buffer.alloc(4);
-    keepAliveBuffer.writeUInt8(action, 0);
-    keepAliveBuffer.writeUInt8(state, 1);
-    keepAliveBuffer.writeUInt16LE(timeout, 2);
-
-    super(ControlType.KEEP_ALIVE_STATE)
-    this.loadBuffer(keepAliveBuffer)
-  }
-}
-
 
 export class FactoryResetPacket extends ControlPacket {
   constructor() {
-    super(ControlType.FACTORY_RESET)
+    super(ControlType.FACTORY_RESET);
     this.loadUInt32(0xdeadbeef)
   }
 }
 
 
-export class ReadConfigPacket extends BLEPacket {
-  getOpCode() {
-    return OpCode.READ
+export class ControlStateGetPacket extends BLEPacket {
+
+  id : number = 0;
+
+  constructor(type, id) {
+    super(type);
+    this.id = id;
   }
 
-  getPacket() {
-    return super.getPacket(this.getOpCode())
-  }
-}
+  getPacket() : Buffer {
+    let packetLength = 4;
+    let buffer = Buffer.alloc(packetLength);
 
+    buffer.writeUInt16LE(this.type, 0);
+    buffer.writeUInt16LE(this.length + 2, 2); // length + 2 for the ID size
 
-export class WriteConfigPacket extends ReadConfigPacket {
-  getOpCode() {
-    return OpCode.WRITE
-  }
-}
+    if (this.length > 0 && this.payloadBuffer) {
+      buffer = Buffer.concat([buffer, this.payloadBuffer])
+    }
+    // create a buffer for the id value.
+    let idBuffer = Buffer.alloc(2);
+    idBuffer.writeUInt16LE(this.id,0);
 
+    buffer = Buffer.concat([buffer, idBuffer]);
 
-export class ReadStatePacket extends BLEPacket {
-  getOpCode() {
-    return OpCode.READ;
-  }
-
-  getPacket() {
-    return super.getPacket(this.getOpCode())
-  }
-}
-
-
-export class WriteStatePacket extends ReadStatePacket {
-  getOpCode() {
-    return OpCode.WRITE
-  }
-}
-
-
-export class NotificationStatePacket extends ReadStatePacket {
-  constructor(packetType, subscribe) {
-    super(packetType)
-    this.loadUInt8(subscribe ? 1 : 0)
+    return buffer;
   }
 
-  getOpCode() {
-    return OpCode.NOTIFY;
-  }
 }

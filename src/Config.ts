@@ -8,6 +8,6 @@ export let LogConfig = {
   cloud   : LOG_LEVEL.info,
   system  : LOG_LEVEL.info,
   log     : LOG_LEVEL.info,  // basic default log for general logging
-}
+};
 
 

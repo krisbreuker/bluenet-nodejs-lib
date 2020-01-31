@@ -1,4 +1,3 @@
-import {BluenetSettings} from "../BluenetSettings";
 import {CLOUD} from "./cloudAPI";
 const sha1 = require('sha-1');
 

@@ -1,10 +1,10 @@
-import { BleHandler }      from "./ble/BleHandler";
+import { BleHandler }      from "./core/ble/BleHandler";
 import { BluenetSettings } from "./BluenetSettings";
 import { eventBus }        from "./util/EventBus";
-import { ControlHandler }  from "./ble/modules/ControlHandler";
+import { ControlHandler }  from "./core/ble/modules/ControlHandler";
 import { CloudHandler }    from "./cloud/CloudHandler";
 import { Topics }          from "./topics/Topics";
-import { SetupHandler }    from "./ble/modules/SetupHandler";
+import { SetupHandler }    from "./core/ble/modules/SetupHandler";
 
 export default class Bluenet {
   ble: BleHandler;
@@ -46,7 +46,7 @@ export default class Bluenet {
     if (userData.adminKey !== undefined && userData.serviceDataKey !== undefined) {
       return new Promise((resolve, reject) => {
         console.log("Keys found in userData, no need to link Cloud.");
-        this.settings.loadKeys(true, userData.adminKey, userData.memberKey, userData.basicKey, userData.serviceDataKey, userData.localizationKey, userData.meshNetworkKey, userData.meshAppKey, "UserData")
+        this.settings.loadKeys(true, userData.adminKey, userData.memberKey, userData.basicKey, userData.serviceDataKey, userData.localizationKey, userData.meshNetworkKey, userData.meshAppKey, "UserData");
         resolve();
       })
     }
@@ -64,7 +64,7 @@ export default class Bluenet {
   connect(connectData, scanDuration = 5) : Promise<void> {
     return this.ble.connect(connectData, scanDuration)
       .then(() => {
-        console.log("Getting Session Nonce...")
+        console.log("Getting Session Nonce...");
         return this.control.getAndSetSessionNonce()
       })
       .then(() => {
@@ -94,7 +94,7 @@ export default class Bluenet {
   }
 
   quit() {
-    this.ble.cleanUp()
+    this.ble.cleanUp();
 
     // this is a hard quit. Your program will end here.
     process.exit(1);
@@ -144,7 +144,7 @@ export default class Bluenet {
         else {
           reject("Timeout: No stones found");
         }
-      }
+      };
 
       fallbackTimeout = setTimeout(() => { finalize()}, scanDuration * 1000);
 
@@ -158,7 +158,7 @@ export default class Bluenet {
             finalize();
           }
         }
-      }
+      };
 
       if (verifiedOnly || setupMode) {
         unsubscribe = this.on(Topics.verifiedAdvertisement, (data) => {

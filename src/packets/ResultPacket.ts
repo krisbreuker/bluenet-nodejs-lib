@@ -1,26 +1,46 @@
-
 /**
  * Wrapper for all relevant data of the object
  *
  */
-export class ResultPacket {
-  type 
-  opCode 
-  length 
-  payload
+import {DataStepper} from "../util/DataStepper";
+import {ControlType, ResultValue} from "../protocol/BluenetTypes";
 
-  valid = false
+export class ResultPacket {
+  commandType;
+  type;
+  opCode;
+  resultCode;
+  size : number;
+  payload : Buffer;
+
+  valid = false;
 
   constructor(data : Buffer) {
-    if (data.length >= 4) {
-      this.valid = true
-      this.type = data.readUInt8(0);
-      this.opCode = data.readUInt8(1);
-      this.length = data.readUInt16LE(2);
-      let totalSize = 4 + this.length;
+    this.load(data);
+  }
+
+  load(data : Buffer) {
+    let minSize = 6;
+
+    if (data.length >= minSize) {
+      this.valid = true;
+
+      let stepper = new DataStepper(data);
+
+      this.commandType = stepper.getUInt16();
+      this.resultCode  = stepper.getUInt16();
+
+      if (ControlType[this.commandType] === undefined || ResultValue[this.resultCode] === undefined) {
+        this.valid = false;
+        return;
+      }
+
+      this.size = stepper.getUInt16();
+
+      let totalSize = minSize + this.size;
 
       if (data.length >= totalSize) {
-        this.payload = data.slice(4);
+        this.payload = stepper.getBuffer(this.size);
       }
       else {
         this.valid = false
@@ -28,17 +48,6 @@ export class ResultPacket {
     }
     else {
       this.valid = false
-    }
-  }
-
-  getUInt16Payload()  {
-    if (this.valid == false) { return 65535; }
-
-    if (this.length >= 2) {
-      return this.payload.readUInt16LE(0);
-    }
-    else {
-      return 65535
     }
   }
 }
