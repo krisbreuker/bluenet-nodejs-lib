@@ -1,4 +1,4 @@
-import {PromiseCallback} from "../types/declarations";
+import {PromiseCallback} from "../declarations/declarations";
 
 export const emailChecker = function(email) {
   let reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -13,10 +13,6 @@ export const numberChecker = function (value) {
   let reg = /[0-9]/g;
   return reg.test(value);
 };
-
-
-
-
 
 
 export const Util = {

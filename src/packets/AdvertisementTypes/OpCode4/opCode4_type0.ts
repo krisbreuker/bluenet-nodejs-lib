@@ -2,16 +2,15 @@ import {ServiceData} from "../../ServiceData";
 import {Util} from "../../../util/Util";
 
 export function parseOpCode4_type0(serviceData : ServiceData, data : Buffer) {
-  if (data.length == 17) {
-    // opCode   = data[0]
-    // dataType = data[1]
+  if (data.length == 16) {
+    // dataType = data[0]
 
-    serviceData.switchState  = data.readUInt8(2);
-    serviceData.flagsBitmask = data.readUInt8(3);
-    serviceData.temperature  = data.readUInt8(4);
+    serviceData.switchState  = data.readUInt8(1);
+    serviceData.flagsBitmask = data.readUInt8(2);
+    serviceData.temperature  = data.readUInt8(3);
 
-    let powerFactor = data.readInt8(5);
-    let realPower   = data.readInt16LE(6);
+    let powerFactor = data.readInt8(4);
+    let realPower   = data.readInt16LE(5);
 
     serviceData.powerFactor = powerFactor / 127;
 
@@ -26,7 +25,7 @@ export function parseOpCode4_type0(serviceData : ServiceData, data : Buffer) {
     serviceData.powerUsageReal     = realPower / 8;
     serviceData.powerUsageApparent = serviceData.powerUsageReal / serviceData.powerFactor;
 
-    serviceData.errorsBitmask = data.readUInt32LE(8);
+    serviceData.errorsBitmask = data.readUInt32LE(7);
 
     // bitmask states
     let bitmaskArray = Util.getBitMaskUInt8(serviceData.flagsBitmask);
@@ -37,7 +36,7 @@ export function parseOpCode4_type0(serviceData : ServiceData, data : Buffer) {
     serviceData.timeIsSet          = bitmaskArray[4];
     serviceData.switchCraftEnabled = bitmaskArray[5];
 
-    serviceData.uniqueIdentifier = data.readUInt8(12);
+    serviceData.uniqueIdentifier = data.readUInt8(11);
   }
 }
 

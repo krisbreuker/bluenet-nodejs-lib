@@ -21,7 +21,7 @@ class DataStepper {
         return this._request(size);
     }
     _request(size) {
-        if (this.position + size < this.length) {
+        if (this.position + size <= this.length) {
             let start = this.position;
             this.position += size;
             return new Buffer(this.buffer.slice(start, this.position));

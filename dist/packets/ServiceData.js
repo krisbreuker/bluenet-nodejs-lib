@@ -3,9 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Parsers_1 = require("./Parsers");
 const CrownstoneErrors_1 = require("./CrownstoneErrors");
 const EncryptionHandler_1 = require("../util/EncryptionHandler");
+const BluenetTypes_1 = require("../protocol/BluenetTypes");
 let aesjs = require('aes-js');
 class ServiceData {
-    constructor(data) {
+    constructor(data, unencrypted = false) {
         this.opCode = 0;
         this.dataType = 0;
         this.crownstoneId = 0;
@@ -32,41 +33,58 @@ class ServiceData {
             this.encryptedData = data.slice(1);
             this.encryptedDataStartIndex = 1;
         }
+        else if (data.length === 16 && unencrypted) {
+            this.encryptedData = data;
+            this.encryptedDataStartIndex = 0;
+        }
         else {
             this.validData = false;
         }
     }
-    parse() {
+    parse(unencrypted = false) {
         this.validData = true;
         if (this.data.length === 18) {
             this.opCode = this.data.readUInt8(0);
-            switch (this.opCode) {
-                case 5:
-                case 7:
-                    Parsers_1.parseOpCode5(this, this.data);
-                    break;
-                case 6:
-                    Parsers_1.parseOpCode6(this, this.data);
-                    break;
-                default:
-                    Parsers_1.parseOpCode5(this, this.data);
-            }
         }
         else if (this.data.length === 17) {
             this.opCode = this.data[0];
-            switch (this.opCode) {
-                case 3:
-                    Parsers_1.parseOpCode3(this, this.data);
-                    break;
-                case 4:
-                    Parsers_1.parseOpCode4(this, this.data);
-                    break;
-                default:
-                    Parsers_1.parseOpCode3(this, this.data);
-            }
+        }
+        else if (this.data.length === 16 && unencrypted === true) {
+            this.opCode = 7;
         }
         else {
             this.validData = false;
+        }
+        if (this.validData) {
+            switch (this.opCode) {
+                case 3:
+                    Parsers_1.parseOpCode3(this, this.encryptedData);
+                    break;
+                case 4:
+                    Parsers_1.parseOpCode4(this, this.encryptedData);
+                    break;
+                case 5:
+                case 7:
+                    this.getDeviceTypeFromPublicData();
+                    Parsers_1.parseOpCode5(this, this.encryptedData);
+                    break;
+                case 6:
+                    this.getDeviceTypeFromPublicData();
+                    Parsers_1.parseOpCode6(this, this.encryptedData);
+                    break;
+                default:
+                    this.getDeviceTypeFromPublicData();
+                    Parsers_1.parseOpCode5(this, this.encryptedData);
+            }
+        }
+    }
+    getDeviceTypeFromPublicData() {
+        if (this.data.length == 18) {
+            let deviceType = this.data.readUInt8(1);
+            this.deviceType = BluenetTypes_1.DeviceType.getLabel(deviceType);
+        }
+        else {
+            this.deviceType = 'undefined';
         }
     }
     hasCrownstoneDataFormat() {

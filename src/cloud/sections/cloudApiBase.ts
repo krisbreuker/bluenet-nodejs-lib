@@ -1,6 +1,6 @@
 import {request} from '../cloudCore'
 import {LOG} from "../../util/logging/Log";
-import {requestOptions, requestType} from "../../types/declarations";
+import {requestOptions, requestType} from "../../declarations/declarations";
 
 export const defaultHeaders = {
   'Accept': 'application/json',

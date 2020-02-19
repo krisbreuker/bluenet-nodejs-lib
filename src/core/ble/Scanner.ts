@@ -3,7 +3,7 @@ import { Topics }            from "../../topics/Topics";
 import { eventBus }          from "../../util/EventBus";
 import { Advertisement }     from "../../packets/Advertisement";
 import { BluenetSettings }   from "../../BluenetSettings";
-import { TrackerMap, Cache } from "../../types/declarations";
+import { TrackerMap, Cache } from "../../declarations/declarations";
 import {
   CROWNSTONE_BUILTIN_ADVERTISEMENT_SERVICE_UUID,
   CROWNSTONE_GUIDESTONE_ADVERTISEMENT_SERVICE_UUID,

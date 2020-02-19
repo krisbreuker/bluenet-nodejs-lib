@@ -3,15 +3,14 @@ import {Util} from "../../../util/Util";
 import {reconstructTimestamp} from "../../../util/Timestamp";
 
 export function parseOpCode3_type0(serviceData : ServiceData, data : Buffer) {
-  if (data.length == 17) {
-    // opCode   = data[0]
-    // dataType = data[1]
+  if (data.length == 16) {
+    // dataType = data[0]
 
     serviceData.stateOfExternalCrownstone = false;
 
-    serviceData.crownstoneId = data.readUInt8(2);
-    serviceData.switchState  = data.readUInt8(3);
-    serviceData.flagsBitmask = data.readUInt8(4);
+    serviceData.crownstoneId = data.readUInt8(1);
+    serviceData.switchState  = data.readUInt8(2);
+    serviceData.flagsBitmask = data.readUInt8(3);
     // bitmask states
     let bitmaskArray = Util.getBitMaskUInt8(serviceData.flagsBitmask);
 
@@ -24,10 +23,10 @@ export function parseOpCode3_type0(serviceData : ServiceData, data : Buffer) {
     serviceData.tapToToggleEnabled  = bitmaskArray[6];
     serviceData.behaviourOverridden = bitmaskArray[7];
 
-    serviceData.temperature  = data.readUInt8(5);
+    serviceData.temperature  = data.readUInt8(4);
 
-    let powerFactor = data.readInt8(6);
-    let realPower   = data.readInt16LE(7);
+    let powerFactor = data.readInt8(5);
+    let realPower   = data.readInt16LE(6);
 
     serviceData.powerFactor = powerFactor / 127;
 
@@ -42,9 +41,9 @@ export function parseOpCode3_type0(serviceData : ServiceData, data : Buffer) {
     serviceData.powerUsageReal     = realPower / 8;
     serviceData.powerUsageApparent = serviceData.powerUsageReal / serviceData.powerFactor;
 
-    serviceData.accumulatedEnergy  = data.readInt32LE(9);
+    serviceData.accumulatedEnergy  = data.readInt32LE(8);
 
-    serviceData.partialTimestamp   = data.readUInt16LE(13);
+    serviceData.partialTimestamp   = data.readUInt16LE(12);
     serviceData.uniqueIdentifier   = serviceData.partialTimestamp;
 
 
@@ -56,7 +55,7 @@ export function parseOpCode3_type0(serviceData : ServiceData, data : Buffer) {
     }
 
 
-    serviceData.validation = data[16]
+    serviceData.validation = data[15]
   }
 }
 
