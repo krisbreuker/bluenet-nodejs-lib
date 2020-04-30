@@ -91,14 +91,17 @@ export class ServiceData {
           break;
         case 4:
           parseOpCode4(this, this.encryptedData);
+          this.setupMode = true;
           break;
         case 5:
         case 7:
           this.getDeviceTypeFromPublicData();
+          this.setupMode = false;
           parseOpCode5(this, this.encryptedData);
           break;
         case 6:
           this.getDeviceTypeFromPublicData();
+          this.setupMode = true;
           parseOpCode6(this, this.encryptedData);
           break;
         default:
