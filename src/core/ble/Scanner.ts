@@ -14,7 +14,7 @@ const noble = require('noble');
 
 export class Scanner {
 
-  nobleState = 'unknown';
+  nobleState = noble.state;
   scanningInProgress = false;
   trackedStones : TrackerMap = {};
   cache : Cache = {};
@@ -141,7 +141,8 @@ export class Scanner {
     if ( !advertisement.serviceDataAvailable ) { return }
 
     // decrypt the advertisement
-    if (this.settings.encryptionEnabled) {
+    let opType = peripheral.advertisement.serviceData[0].data.readUInt8(0);
+    if (opType!==6 && this.settings.encryptionEnabled) {
       advertisement.decrypt(this.settings.basicKey);
     }
     else {
