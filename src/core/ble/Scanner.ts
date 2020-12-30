@@ -10,7 +10,7 @@ import {
   CROWNSTONE_PLUG_ADVERTISEMENT_SERVICE_UUID
 } from "../../protocol/Services";
 
-const noble = require('noble');
+const noble = require('@abandonware/noble');
 
 export class Scanner {
 
