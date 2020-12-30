@@ -158,7 +158,7 @@ export class BleHandler {
   }
 
   stopScanning() {
-    this.scanner.stop();
+    return this.scanner.stop();
   }
 
   isReady() {

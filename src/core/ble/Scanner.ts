@@ -74,9 +74,13 @@ export class Scanner {
 
   stop() {
     if (this.scanningInProgress) {
-      noble.stopScanning();
-      this.scanningInProgress = false;
+      return new Promise((resolve, reject) => {
+        noble.stopScanning(resolve);
+        this.scanningInProgress = false;
+      })
     }
+    else
+      return Promise.resolve();
   }
 
   cleanUp() {

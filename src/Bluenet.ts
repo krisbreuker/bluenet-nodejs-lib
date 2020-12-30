@@ -105,7 +105,7 @@ export default class Bluenet {
   }
 
   stopScanning() {
-    this.ble.stopScanning()
+    return this.ble.stopScanning()
   }
 
   on(topic, callback) {

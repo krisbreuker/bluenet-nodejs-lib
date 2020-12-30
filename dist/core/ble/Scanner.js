@@ -8,7 +8,7 @@ const Services_1 = require("../../protocol/Services");
 const noble = require('noble');
 class Scanner {
     constructor(settings) {
-        this.nobleState = 'unknown';
+        this.nobleState = noble.state;
         this.scanningInProgress = false;
         this.trackedStones = {};
         this.cache = {};
@@ -54,9 +54,13 @@ class Scanner {
     }
     stop() {
         if (this.scanningInProgress) {
-            noble.stopScanning();
-            this.scanningInProgress = false;
+            return new Promise((resolve, reject) => {
+                noble.stopScanning(resolve);
+                this.scanningInProgress = false;
+            });
         }
+        else
+            return Promise.resolve();
     }
     cleanUp() {
         noble.removeAllListeners();
@@ -111,7 +115,8 @@ class Scanner {
             return;
         }
         // decrypt the advertisement
-        if (this.settings.encryptionEnabled) {
+        let opType = peripheral.advertisement.serviceData[0].data.readUInt8(0);
+        if (opType !== 6 && this.settings.encryptionEnabled) {
             advertisement.decrypt(this.settings.basicKey);
         }
         else {

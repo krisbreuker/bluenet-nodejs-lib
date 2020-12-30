@@ -144,7 +144,7 @@ class BleHandler {
         return this.scanner.start();
     }
     stopScanning() {
-        this.scanner.stop();
+        return this.scanner.stop();
     }
     isReady() {
         return this.scanner.isReady();

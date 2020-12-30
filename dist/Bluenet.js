@@ -85,7 +85,7 @@ class Bluenet {
         return this.ble.startScanning();
     }
     stopScanning() {
-        this.ble.stopScanning();
+        return this.ble.stopScanning();
     }
     on(topic, callback) {
         return EventBus_1.eventBus.on(topic, callback);
